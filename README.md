@@ -17,9 +17,8 @@ TwitchControl is an open-source alternative to traditional crowd control systems
 To start using TwitchControl, follow these simple steps:
 
 1. **Installation**: Download and install the latest version from our [GitHub repository](https://github.com/TwitchControl/TwitchControl/releases).
-2. **Configuration**: Follow the setup guide to configure TwitchControl with your Twitch account.
-3. **Plugins**: Download the plugins for your game from the [plugin index](https://github.com/TwitchControl/TwitchControl/tree/main/plugins).
-4. **Engage**: Start streaming and let your audience interact with your content in new and exciting ways.
+2. **Configuration**: Follow the setup guide to configure Twitch Control with your Twitch account.
+3. **Engage**: Start streaming and let your audience interact with your content in new and exciting ways.
 
 ## Contributing
 

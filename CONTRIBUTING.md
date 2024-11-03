@@ -30,22 +30,21 @@ Thank you for your interest in contributing to Twitch Control! We welcome contri
 
    ```bash
    python3 main.py
+   ```
 
 ## Creating Your Own Plugin
 
-1. **Create a New Repository**: Start by creating a new repository on your GitHub account for your plugin.
+1. **Develop Your Plugin**: Develop your plugin directly within the `plugins` directory of the Twitch Control repository or manage it as a separate repository and include it as a submodule. Follow the coding standards and test your plugin thoroughly.
 
-2. **Develop Your Plugin**: Follow the coding standards and test your plugin thoroughly.
-
-3. **Testing Your Plugin**: Test your plugin thoroughly to ensure it works as expected.
+2. **Testing Your Plugin**: Test your plugin thoroughly to ensure it works as expected.
 
 ## Submitting Your Plugin
 
-1. **Open a GitHub Issue**: Once your plugin is ready, open an issue on the [Twitch Control repository](https://github.com/TwitchControl/TwitchControl/issues) to request the creation of your plugin in the Twitch Control organization.
+1. **Open a Pull Request**: Once your plugin is ready, open a pull request to the [Twitch Control repository](https://github.com/TwitchControl/TwitchControl/pulls) to include your plugin in the main project.
 
 2. **Provide Details**: Include details about your plugin, such as its purpose, features, and any other relevant information.
 
-3. **Await Approval**: The Twitch Control team will review your submission and, if approved, create a repository for your plugin within the Twitch Control organization.
+3. **Await Approval**: The Twitch Control team will review your submission and, if approved, merge your plugin into the main project.
 
 ## Code of Conduct
 

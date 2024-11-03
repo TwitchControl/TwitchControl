@@ -118,9 +118,16 @@ def check_emulator_window():
 
 def format_game_name(module_name):
     # Convert camel case to title case with spaces, handling numbers separately
-    formatted_name = ''.join([' ' + char if char.isupper() else char for char in module_name]).title().strip()
+    formatted_name = ''.join([' ' + char if char.isupper() else char for char in module_name]).strip()
+    
     # Ensure numbers are separated from the preceding word
-    formatted_name = ''.join([' ' + char if char.isdigit() and not formatted_name[i-1].isspace() else char for i, char in enumerate(formatted_name)])
+    formatted_name = ''.join([
+        ' ' + char if char.isdigit() and (i == 0 or not formatted_name[i-1].isspace()) else char
+        for i, char in enumerate(formatted_name)
+    ])
+    
+    # Capitalize the first letter of each word
+    formatted_name = ' '.join(word.capitalize() for word in formatted_name.split())
     return formatted_name
 
 def format_game_name_camel(module_name):

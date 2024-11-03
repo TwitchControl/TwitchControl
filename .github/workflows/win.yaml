@@ -29,7 +29,7 @@ jobs:
         echo "    return '$env:GIT_COMMIT_SHORT_HASH'" | Out-File -FilePath version.py -Append -Encoding utf8
         
     - name: Build Project
-      run: pyinstaller --onefile .\main.py --name="Twitch Control" -w && mkdir dist\plugins
+      run: pyinstaller --onefile .\main.py --include-data "plugins/*/*.json5;plugins/*" --name="Twitch Control" -w && mkdir dist\plugins
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4

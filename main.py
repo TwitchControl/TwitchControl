@@ -15,6 +15,8 @@ import twitchio
 from twitchio.ext import commands, pubsub
 from PIL import ImageTk
 
+from plugins.marioParty4 import marioParty4
+
 from functions import (
     check_emulator_window,
     create_channel_point_reward,
@@ -58,18 +60,18 @@ class App():
             self.config = json5.load(config_file)
 
         
-        # Initialize token and initial_channel from the configuration
         self.token = "oauth:" + self.config.get("token", "")
         self.initial_channel = self.config.get("channelName", "")
         self.selected_plugin = self.config.get("selectedPlugin", "None")
 
-        # Create GUI window
         self.window = customtkinter.CTk()
         self.window.title(f"Twitch Control ({getVersion()})")
         self.window.geometry("1080x720")
 
         self.client = twitchio.Client(token=self.token)
         self.client.pubsub = pubsub.PubSubPool(self.client)
+
+        plugins = ["marioParty4"]
 
         if self.initial_channel == "":
             twitchChannel = "Twitch disconnected"
@@ -79,7 +81,6 @@ class App():
         frame = customtkinter.CTkFrame(self.window)
         frame.pack(anchor="nw", padx=10, pady=5, fill="x")
 
-        # Create bold label for "Channel:"
         channel_label_bold = customtkinter.CTkLabel(
             frame,
             text="Channel: ",
@@ -88,7 +89,6 @@ class App():
         channel_label_bold.pack(side="left", padx=5)
         
         global channel_name_label
-        # Create regular label for the channel name
         channel_name_label = customtkinter.CTkLabel(
             frame,
             text=twitchChannel,
@@ -96,37 +96,31 @@ class App():
         )
         channel_name_label.pack(side="left")
         
-        # Create a new frame for the status label
         status_frame = customtkinter.CTkFrame(self.window)
-        status_frame.pack(anchor="nw", padx=10, pady=2)  # Reduced pady for more compactness
+        status_frame.pack(anchor="nw", padx=10, pady=2)
         
-        # Create status label with bold "Status:"
         self.status_label = customtkinter.CTkLabel(
             status_frame,
             text="Status: ",
             font=("Arial", 28, "bold")
         )
-        self.status_label.pack(side="left", padx=5)  # Change to side="left" to align next to the status name
+        self.status_label.pack(side="left", padx=5)
 
-        # Create regular label for the channel name
         self.status_name_label = customtkinter.CTkLabel(
             status_frame,
             text="Disconnected",
             font=("Arial", 20)
         )
-        self.status_name_label.pack(side="left", padx=5)  # Add some padding for spacing
+        self.status_name_label.pack(side="left", padx=5)
 
-        # Create a text box for logging
         self.log_console = customtkinter.CTkTextbox(self.window, width=100, height=20)
-        log_console = self.log_console  # Assign to global variable
+        log_console = self.log_console
         log_console.pack(padx=10, pady=10, fill="both", expand=True)
         log_console.configure(font=("Courier", 18))
 
-        # Create an entry for user input
         self.command_entry = customtkinter.CTkEntry(self.window, width=80)
         self.command_entry.pack(side="left", padx=10, pady=5, fill="x", expand=True)
 
-        # Create a button to submit the command
         self.submit_button = customtkinter.CTkButton(self.window, text="Submit", command=self.submit_command)
         self.submit_button.pack(side="right", padx=10, pady=5)
 
@@ -135,37 +129,22 @@ class App():
 
         self.connected_to_dolphin = False
         self.check_connection()
-                # Load configuration
+        
         with open('config.json5', 'r') as config_file:
             self.config = json5.load(config_file)
 
-        # Initalize plugins
-        games_dir = 'plugins'
-        
         try:
-            os.mkdir(games_dir)
+            os.mkdir("plugins")
         except FileExistsError:
             pass
         
-        # Define the path to the external plugins directory
         plugins_dir = os.path.join(os.path.dirname(sys.executable), 'plugins')
         
-        # Add the plugins directory to the system path
         sys.path.append(plugins_dir)
         
         # Load plugins
-        plugins = ["marioParty4"]
-
         game_names = [format_game_name(f) for f in plugins]
-    
-        for game in plugins:
-            try:
-                # Attempt to import the module from the 'plugins' package
-                module = importlib.import_module(f'plugins.{game}.{game}')
-                log_message(f'Loaded Plugin: {format_game_name(game)}')
-                self.on_game_selected(game)
-            except ModuleNotFoundError:
-                log_message(f'Plugin not loaded: {format_game_name(game)}')
+        self.on_game_selected(self.config.get("selectedPlugin", "None"))
 
         # Check if there are any plugins loaded
         if game_names:
@@ -174,10 +153,10 @@ class App():
                 values=["None"] + game_names,
                 command=self.on_game_selected
             )
-            self.game_selection.pack(side="right", padx=5)  # Add some padding for spacing
-            self.game_selection.set(self.selected_plugin)  # Set the initial selection to the saved plugin
+            self.game_selection.pack(side="right", padx=5)
+            self.game_selection.set(self.selected_plugin)
         else:
-            log_message("No modules loaded.")  # Log message if no plugins are loaded
+            log_message("No modules loaded.")
        
 
     def on_game_selected(self, selected_game):
@@ -194,6 +173,8 @@ class App():
             camel_case_game = ''.join(word.capitalize() for word in words)
             with open(f'plugins/{lower_camel_case_game}/{camel_case_game}.json5', 'r') as game_config_file:
                 self.game_config = json5.load(game_config_file)
+                log_message(f"Loaded config for plugin {selected_game}.")
+
         except FileNotFoundError:
             log_message(f"Configuration file for plugin {selected_game} not found.")
         except json5.JSONDecodeError as e:
@@ -276,13 +257,11 @@ class App():
             log_message
         ]
 
-        # Optionally add isUserInputRequired and prompt if they exist
         if "isUserInputRequired" in reward:
             args.append(reward["isUserInputRequired"])
         if "prompt" in reward:
             args.append(reward["prompt"])
 
-        # Start the thread with the prepared arguments
         create_reward_thread = threading.Thread(target=create_channel_point_reward, args=tuple(args))
         create_reward_thread.start()
         log_message(f"Created channel point reward {reward['name']}")
@@ -314,36 +293,33 @@ class App():
     
     def check_connection(self):
         try:
-            emulator_status = check_emulator_window()  # Check the emulator window status
+            emulator_status = check_emulator_window()
             if emulator_status == "Dolphin":
                 try:
                     dolphin_memory_engine.hook()
-                    self.indicator.configure(text_color="green")
                     self.status_name_label.configure(text="Connected")
                     log_message(f"Successfully Connected to Dolphin")
-                    self.connected_to_dolphin = True  # Update the flag once connected
-                except Exception as e:  # Catch any exceptions during hooking
+                    self.connected_to_dolphin = True
+                except Exception as e:
                     self.status_name_label.configure(text="Disconnected")
-                    log_message(f"Failed to hook to Dolphin: {str(e)}")  # Log the error message
-                    self.connected_to_dolphin = False  # Update the flag to indicate not connected
+                    log_message(f"Failed to hook to Dolphin: {str(e)}")
+                    self.connected_to_dolphin = False
             else:
                 self.status_name_label.configure(text="Disconnected")
-                log_message("Dolphin emulator is not running.")  # Log if Dolphin is not open
-                self.connected_to_dolphin = False  # Update the flag to indicate not connected
-        except Exception as e:  # Catch any exceptions during the connection check
+                log_message("Dolphin emulator is not running.")
+                self.connected_to_dolphin = False
+        except Exception as e:
             self.status_name_label.configure(text="Disconnected")
-            log_message(f"Error checking connection: {str(e)}")  # Log the error message
-            self.connected_to_dolphin = False  # Update the flag to indicate not connected
+            log_message(f"Error checking connection: {str(e)}")
+            self.connected_to_dolphin = False
     
     def disconnect_from_dolphin(self):
         if self.connected_to_dolphin:
-            self.indicator.configure(text_color="red")
             self.status_name_label.configure(text="Disconnected")
             log_message("Disconnected from Dolphin.")
             dolphin_memory_engine.un_hook()
         else:
             log_message("Dolphin already disconnected.")
-
 
     def run_gui(self):
         self.window.mainloop()
@@ -354,17 +330,15 @@ class TwitchBot(commands.Bot):
         client = twitchio.Client(token=token)
         client.pubsub = pubsub.PubSubPool(client)
 
-        # Load configuration
         with open('config.json5', 'r') as config_file:
             self.config = json5.load(config_file)
 
-        # Register events
         self.register_events(client)
         dolphin_memory_engine.hook()
 
         @client.event()
         async def event_pubsub_channel_points(event: pubsub.PubSubChannelPointsMessage):
-            log_message(f'Received channel points event: {event.reward.title}')  # Log the received event
+            log_message(f'Received channel points event: {event.reward.title}')
             if self.game_selection == "Mario Party 4":
                 marioParty4.loadGame(self.config, event, log_message)
 
@@ -393,4 +367,3 @@ if __name__ == "__main__":
     
     gui_thread = threading.Thread(target=app.run_gui(), daemon=True)
     gui_thread.start()
-

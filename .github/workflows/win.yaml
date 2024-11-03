@@ -32,7 +32,6 @@ jobs:
     - name: Build Project
       run: |
         pyinstaller --onefile .\main.py \
-                    --include-submodules \
                     --name="Twitch Control" \
                     -w
         mkdir dist\plugins

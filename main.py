@@ -7,6 +7,7 @@ import math
 import platform
 import asyncio
 import importlib
+import sys
 
 import customtkinter
 import json5
@@ -140,12 +141,22 @@ class App():
 
         # Initalize plugins
         games_dir = 'plugins'
+        
         try:
             os.mkdir(games_dir)
         except FileExistsError:
             pass
+        
+        # Define the path to the external plugins directory
+        plugins_dir = os.path.join(os.path.dirname(__file__), 'plugins')
+        
+        # Add the plugins directory to the system path
+        sys.path.append(plugins_dir)
+        
+        # Load plugins
         plugins = []
-        for root, dirs, files in os.walk(games_dir):
+
+        for root, dirs, files in os.walk(plugins_dir):
             for file in files:
                 if file.endswith('.py') and file != '__init__.py':
                     # Extract the game name from the file path

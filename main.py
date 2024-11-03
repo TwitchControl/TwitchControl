@@ -148,7 +148,7 @@ class App():
             pass
         
         # Define the path to the external plugins directory
-        plugins_dir = os.path.join(os.path.dirname(__file__), 'plugins')
+        plugins_dir = os.path.join(os.path.dirname(sys.executable), 'plugins')
         
         # Add the plugins directory to the system path
         sys.path.append(plugins_dir)

@@ -3,7 +3,7 @@ import random
 import math
 import time
 
-def loadGame(config, event, log_message):
+def loadGame(config, event, log_message, config):
     if event.reward.title == config["rewards"][0]["name"]:
         maxTurns = dolphin_memory_engine.read_bytes(0x8018FCFD, 1)
         maxTurnsPlusOne = int.from_bytes(maxTurns, byteorder='big') + 1

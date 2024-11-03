@@ -241,7 +241,8 @@ class App():
                         self.create_reward(reward)
             else:
                 log_message("No rewards found in the selected game's configuration.")
-        elif self.config["token"] == "" or self.config["channelName"] == "":
+
+        elif self.config.get("token", "") == "" or self.config.get("channelName", "") == "":
             log_message("Failed to create channel point rewards. Is your channel linked?")
 
     def create_reward(self, reward):
@@ -264,7 +265,6 @@ class App():
 
         create_reward_thread = threading.Thread(target=create_channel_point_reward, args=tuple(args))
         create_reward_thread.start()
-        log_message(f"Created channel point reward {reward['name']}")
 
     def handle_unlink(self):
         if self.config["channelName"] != "":

@@ -29,7 +29,8 @@ jobs:
         echo "    return '$env:GIT_COMMIT_SHORT_HASH'" | Out-File -FilePath version.py -Append -Encoding utf8
         
     - name: Build Project
-      run: pyinstaller --onefile .\main.py --name="Twitch Control" -w --add-data "plugins/marioParty4/*.py;plugins/marioParty4"
+      run: pyinstaller --onefile .\main.py --name="Twitch Control" -w
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:

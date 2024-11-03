@@ -20,7 +20,8 @@ from functions import (
     get_broadcaster_id,
     strip_text_after_cmd,
     update_config_if_data,
-    update_config_if_empty
+    update_config_if_empty,
+    format_game_name
 )
 from version import getVersion
 
@@ -149,123 +150,134 @@ class App():
                     game_name = os.path.splitext(file)[0]
                     plugins.append(game_name)
 
-        game_names = [self.format_game_name(f) for f in plugins]
-        print(game_names)
+        game_names = [format_game_name(f) for f in plugins]
+
         for game in plugins:
             try:
+                print()
                 # Attempt to import the module from the 'plugins' package
-                module = importlib.import_module(f'plugins.{game}.{game}')
-                log_message(f'Loaded Game: {game}')
+                module = importlib.import_module(f'plugins.{game[0].upper() + game[1:]}.{game}')
+                log_message(f'Loaded Plugin: {format_game_name(game)}')
             except ModuleNotFoundError:
-                pass
+                log_message(f'Plugin not loaded: {format_game_name(game)}')
 
         # Check if there are any plugins loaded
         if game_names:
             self.game_selection = customtkinter.CTkOptionMenu(
                 frame,
-                values=game_names,
+                values=["None"] + game_names,
                 command=self.on_game_selected
             )
             self.game_selection.pack(side="right", padx=5)  # Add some padding for spacing
         else:
             log_message("No modules loaded.")  # Log message if no plugins are loaded
 
-
-    def format_game_name(self, module_name):
-        # Convert camel case to title case with spaces, handling numbers separately
-        formatted_name = ''.join([' ' + char if char.isupper() else char for char in module_name]).title().strip()
-        # Ensure numbers are separated from the preceding word
-        formatted_name = ''.join([' ' + char if char.isdigit() and not formatted_name[i-1].isspace() else char for i, char in enumerate(formatted_name)])
-        return formatted_name
-
     def on_game_selected(self, selected_game):
-        log_message(f"Selected game: {selected_game}")
+        log_message(f"Selected plugin: {selected_game}")
         # Load game-specific configuration
         try:
-            with open(f'plugins/{selected_game}/{selected_game}.json5', 'r') as game_config_file:
+            words = selected_game.split()
+            lower_camel_case_game = words[0].lower() + ''.join(word.capitalize() for word in words[1:])
+            camel_case_game = ''.join(word.capitalize() for word in words)
+            with open(f'plugins/{lower_camel_case_game}/{camel_case_game}.json5', 'r') as game_config_file:
                 self.game_config = json5.load(game_config_file)
-            log_message(f"Loaded configuration for {selected_game}")
+            log_message(f"Loaded plugin for {selected_game}")
         except FileNotFoundError:
             log_message(f"Configuration file for {selected_game} not found.")
         except json5.JSONDecodeError as e:
             log_message(f"Error decoding JSON for {selected_game}: {str(e)}")
 
-
     def submit_command(self):
         command = self.command_entry.get()
         log_message(f"> {command}")
         self.command_entry.delete(0, "end")
+
         if command == "/connect":
-            if self.status_name_label.cget("text") != "Connected":
-                self.check_connection()
-            else:
-                log_message("Already connected to dolphin.")
+            self.handle_connect()
         elif command == "/help":
-            log_message("/connect - Connects to Dolphin.")
-            log_message("/create - Creates the rewards on Twitch.")
-            log_message("/disconnect - Disconnect from Dolphin")
-            log_message("/link - Link to a Twitch account")
-            log_message("/unlink - Unlink from Twitch.")
-            log_message("/version - Gives the version of the app.")
+            self.handle_help()
         elif command == "/disconnect":
-            self.disconnect_from_dolphin()
+            self.handle_disconnect()
         elif "/link" in command:
-            args = strip_text_after_cmd(command).split()
-            arg = args[0] if len(args) > 0 else ""
-            arg2 = args[1] if len(args) > 1 else ""
-            if arg == "":
-                log_message("No channel defined. Type /link <channel> <token>")
-            elif arg2 == "":
-                log_message(f"No token defined. Type /link {arg} <token>")
-            else:
-                self.twitch_connect(arg, arg2)
+            self.handle_link(command)
         elif "/create" in command:
-            if self.config["token"] != "" and self.config["channelName"] != "":
-                for reward in self.config["rewards"]:
-                    if reward["enabled"] == "True":
-                        if reward.get("isUserInputRequired", False) is False:
-                            create_reward_thread = threading.Thread(target=create_channel_point_reward, args=(
-                                self.config["channelName"],
-                                reward["name"],
-                                reward["cost"],
-                                self.config["token"],
-                                reward["maxPerStream"],
-                                reward["maxPerUserPerStream"],
-                                reward["cooldown"],
-                                reward["maxPerStreamEnabled"],
-                                log_message
-                            ))
-                            create_reward_thread.start()
-                        else:
-                            create_reward_thread = threading.Thread(target=create_channel_point_reward, args=(
-                                self.config["channelName"],
-                                reward["name"],
-                                reward["cost"],
-                                self.config["token"],
-                                reward["maxPerStream"],
-                                reward["maxPerUserPerStream"],
-                                reward["cooldown"],
-                                reward["maxPerStreamEnabled"],
-                                log_message
-                            ))
-                            create_reward_thread.start()
-                            log_message(f"Created channel point reward {reward["name"]}")
-            elif self.config["token"] == "" or self.config["channelName"] == "":
-                log_message("Failed to create channel point rewards is your channel linked.")
+            self.handle_create()
         elif "/unlink" in command:
-            arg = strip_text_after_cmd(command)
-            if self.config["channelName"] != "":
-                update_config_if_data('config.json5', 'channelName', "")
-                update_config_if_data('config.json5', 'token', "")
-                log_message("Unlinked from Twitch")
-                channel_name_label.configure(text="Twitch disconnected")
-            else:
-                log_message("No channel is linked.")
+            self.handle_unlink()
         elif "/version" in command:
-            log_message(f"MP Twitch Control: v{getVersion()}")
+            self.handle_version()
         else:
             log_message(f"Unknown command. Type /help for a list of commands.")
 
+    def handle_connect(self):
+        if self.status_name_label.cget("text") != "Connected":
+            self.check_connection()
+        else:
+            log_message("Already connected to dolphin.")
+
+    def handle_help(self):
+        log_message("/connect - Connects to Dolphin.")
+        log_message("/create - Creates the rewards on Twitch.")
+        log_message("/disconnect - Disconnect from Dolphin")
+        log_message("/link - Link to a Twitch account")
+        log_message("/unlink - Unlink from Twitch.")
+        log_message("/version - Gives the version of the app.")
+
+    def handle_disconnect(self):
+        self.disconnect_from_dolphin()
+
+    def handle_link(self, command):
+        args = strip_text_after_cmd(command).split()
+        arg = args[0] if len(args) > 0 else ""
+        arg2 = args[1] if len(args) > 1 else ""
+        if arg == "":
+            log_message("No channel defined. Type /link <channel> <token>")
+        elif arg2 == "":
+            log_message(f"No token defined. Type /link {arg} <token>")
+        else:
+            self.twitch_connect(arg, arg2)
+
+    def handle_create(self):
+        if self.config["token"] != "" and self.config["channelName"] != "":
+            if hasattr(self, 'game_config') and "rewards" in self.game_config:
+                rewards = self.game_config["rewards"]
+                for reward in rewards:
+                    if reward["enabled"] == "True":
+                        self.create_reward(reward)
+                    else:
+                        self.create_reward(reward)
+            else:
+                log_message("No rewards found in the selected game's configuration.")
+        elif self.config["token"] == "" or self.config["channelName"] == "":
+            log_message("Failed to create channel point rewards. Is your channel linked?")
+
+    def create_reward(self, reward):
+        create_reward_thread = threading.Thread(target=create_channel_point_reward, args=(
+            self.config["channelName"],
+            reward["name"],
+            reward["cost"],
+            self.config["token"],
+            reward["maxPerStream"],
+            reward["maxPerUserPerStream"],
+            reward["cooldown"],
+            reward["maxPerStreamEnabled"],
+            log_message
+        ))
+        create_reward_thread.start()
+        log_message(f"Created channel point reward {reward['name']}")
+
+    def handle_unlink(self):
+        if self.config["channelName"] != "":
+            update_config_if_data('config.json5', 'channelName', "")
+            update_config_if_data('config.json5', 'token', "")
+            log_message("Unlinked from Twitch")
+            channel_name_label.configure(text="Twitch disconnected")
+        else:
+            log_message("No channel is linked.")
+
+    def handle_version(self):
+        log_message(f"MP Twitch Control: v{getVersion()}")
+        
     def twitch_connect(self, arg, arg2):
         if self.config["channelName"] == "" and self.config["token"] == "":
             update_config_if_empty('config.json5', 'channelName', arg)

@@ -4,3 +4,4 @@ __pycache__/
 *.spec
 version.py
 .DS_Store
+*.json5

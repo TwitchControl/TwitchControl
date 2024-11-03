@@ -25,8 +25,8 @@ jobs:
       
     - name: Post Hash
       run: |
-        echo def getVersion(): > version.py
-        echo return "%%GIT_COMMIT_SHORT_HASH%%" >> version.py
+        echo "def getVersion():" | Out-File -FilePath version.py -Encoding utf8
+        echo "    return '%%GIT_COMMIT_SHORT_HASH%%'" | Out-File -FilePath version.py -Append -Encoding utf8
         
     - name: Build Project
       run: pyinstaller --onefile .\main.py --name="Twitch Control" -w && mkdir dist\plugins

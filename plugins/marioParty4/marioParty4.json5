@@ -1,0 +1,304 @@
+{
+  "rewards": [
+    {
+      name: "Add One Turn",
+      cost: 3000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Wipe P1 Items",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Wipe P2 Items",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Wipe P3 Items",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Wipe P4 Items",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+20 Coins P1",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+20 Coins P2",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+20 Coins P3",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+20 Coins P4",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+1 Star P1",
+      cost: 2500,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+1 Star P2",
+      cost: 2500,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+1 Star P3",
+      cost: 2500,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "+1 Star P4",
+      cost: 2500,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Coin Revolution",
+      cost: 7500,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Star Revolution",
+      cost: 15000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Give P1 1 Item",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      dxItems: "False"
+    },
+    {
+      name: "Give P2 1 Item",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      dxItems: "False"
+    },
+    {
+      name: "Give P3 1 Item",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      dxItems: "False"
+    },
+    {
+      name: "Give P4 1 Item",
+      cost: 2000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      dxItems: "False"
+    },
+    {
+      name: "-20 Coins P1",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-20 Coins P2",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-20 Coins P3",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-20 Coins P4",
+      cost: 200,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-1 Star P1",
+      cost: 5000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-1 Star P2",
+      cost: 5000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-1 Star P3",
+      cost: 5000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "-1 Star P4",
+      cost: 5000,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Redistribute ALL Items",
+      cost: 7500,
+      maxPerStream: 5,
+      maxPerUserPerStream: 1,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True"
+    },
+    {
+      name: "Lock P1 Dice",
+      cost: 1000,
+      maxPerStream: 20,
+      maxPerUserPerStream: 5,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      isUserInputRequired: "True",
+      prompt: "Accepts 1-20"
+    },
+    {
+      name: "Lock P2 Dice",
+      cost: 1000,
+      maxPerStream: 20,
+      maxPerUserPerStream: 5,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      isUserInputRequired: "True",
+      prompt: "Accepts 1-20"
+    },
+    {
+      name: "Lock P3 Dice",
+      cost: 1000,
+      maxPerStream: 20,
+      maxPerUserPerStream: 5,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      isUserInputRequired: "True",
+      prompt: "Accepts 1-20"
+    },
+    {
+      name: "Lock P4 Dice",
+      cost: 1000,
+      maxPerStream: 20,
+      maxPerUserPerStream: 5,
+      maxPerStreamEnabled: "True",
+      cooldown: 60,
+      enabled: "True",
+      isUserInputRequired: "True",
+      prompt: "Accepts 1-20"
+    }
+  ]
+}

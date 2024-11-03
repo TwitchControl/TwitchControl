@@ -172,10 +172,10 @@ class App():
                 command=self.on_game_selected
             )
             self.game_selection.pack(side="right", padx=5)  # Add some padding for spacing
+            self.game_selection.set(self.selected_plugin)  # Set the initial selection to the saved plugin
         else:
             log_message("No modules loaded.")  # Log message if no plugins are loaded
        
-        self.game_selection.set(self.selected_plugin)  # Set the initial selection to the saved plugin
 
     def on_game_selected(self, selected_game):
         log_message(f"Selected plugin: {selected_game}")

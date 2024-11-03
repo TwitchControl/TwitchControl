@@ -1,0 +1,2 @@
+def getVersion():
+    return "DEV"

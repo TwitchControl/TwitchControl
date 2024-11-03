@@ -9,3 +9,4 @@ echo def getVersion(): > version.py
 echo     return "%%GIT_HASH%%" >> version.py
 
 pyinstaller --onefile .\main.py --name="Twitch Control" -w
+mkdir dist\plugins

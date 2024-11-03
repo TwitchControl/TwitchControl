@@ -114,3 +114,20 @@ def check_emulator_window():
         if hwnd:
             return "Dolphin"
         return None
+
+def format_game_name(module_name):
+    # Convert camel case to title case with spaces, handling numbers separately
+    formatted_name = ''.join([' ' + char if char.isupper() else char for char in module_name]).title().strip()
+    # Ensure numbers are separated from the preceding word
+    formatted_name = ''.join([' ' + char if char.isdigit() and not formatted_name[i-1].isspace() else char for i, char in enumerate(formatted_name)])
+    return formatted_name
+
+def format_game_name_camel(module_name):
+    # Convert camel case to title case with spaces, handling numbers separately
+    formatted_name = ''.join([' ' + char if char.isupper() else char for char in module_name]).title().strip()
+    # Ensure numbers are separated from the preceding word
+    formatted_name = ''.join([' ' + char if char.isdigit() and not formatted_name[i-1].isspace() else char for i, char in enumerate(formatted_name)])
+    # Capitalize the first character if it's not already
+    if formatted_name and not formatted_name[0].isupper():
+        formatted_name = formatted_name[0].upper() + formatted_name[1:]
+    return formatted_name

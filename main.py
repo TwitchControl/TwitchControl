@@ -47,7 +47,8 @@ class App():
         if not os.path.exists(config_path):
             dummy_data = {
                 "token": "dummy_token",
-                "channelName": "dummy_channel"
+                "channelName": "dummy_channel",
+                "selectedPlugin": "None"
             }
             with open(config_path, 'w') as config_file:
                 json5.dump(dummy_data, config_file, indent=4)
@@ -59,6 +60,7 @@ class App():
         # Initialize token and initial_channel from the configuration
         self.token = "oauth:" + self.config.get("token", "")
         self.initial_channel = self.config.get("channelName", "")
+        self.selected_plugin = self.config.get("selectedPlugin", "None")
 
         # Create GUI window
         self.window = customtkinter.CTk()
@@ -117,7 +119,7 @@ class App():
         self.log_console = customtkinter.CTkTextbox(self.window, width=100, height=20)
         log_console = self.log_console  # Assign to global variable
         log_console.pack(padx=10, pady=10, fill="both", expand=True)
-        log_console.configure(font=("Courier", 20))
+        log_console.configure(font=("Courier", 18))
 
         # Create an entry for user input
         self.command_entry = customtkinter.CTkEntry(self.window, width=80)
@@ -158,6 +160,7 @@ class App():
                 # Attempt to import the module from the 'plugins' package
                 module = importlib.import_module(f'plugins.{game[0].upper() + game[1:]}.{game}')
                 log_message(f'Loaded Plugin: {format_game_name(game)}')
+                self.on_game_selected(game)
             except ModuleNotFoundError:
                 log_message(f'Plugin not loaded: {format_game_name(game)}')
 
@@ -171,10 +174,17 @@ class App():
             self.game_selection.pack(side="right", padx=5)  # Add some padding for spacing
         else:
             log_message("No modules loaded.")  # Log message if no plugins are loaded
+       
+        self.game_selection.set(self.selected_plugin)  # Set the initial selection to the saved plugin
 
     def on_game_selected(self, selected_game):
         log_message(f"Selected plugin: {selected_game}")
-        # Load game-specific configuration
+        
+        # Save the selected plugin to the configuration
+        self.config["selectedPlugin"] = selected_game
+        with open('config.json5', 'w') as config_file:
+            json5.dump(self.config, config_file, indent=4)
+
         try:
             words = selected_game.split()
             lower_camel_case_game = words[0].lower() + ''.join(word.capitalize() for word in words[1:])
@@ -183,9 +193,9 @@ class App():
                 self.game_config = json5.load(game_config_file)
             log_message(f"Loaded plugin for {selected_game}")
         except FileNotFoundError:
-            log_message(f"Configuration file for {selected_game} not found.")
+            log_message(f"Configuration file for plugin {selected_game} not found.")
         except json5.JSONDecodeError as e:
-            log_message(f"Error decoding JSON for {selected_game}: {str(e)}")
+            log_message(f"Error decoding JSON for plugin {selected_game}: {str(e)}")
 
     def submit_command(self):
         command = self.command_entry.get()
@@ -252,7 +262,7 @@ class App():
             log_message("Failed to create channel point rewards. Is your channel linked?")
 
     def create_reward(self, reward):
-        create_reward_thread = threading.Thread(target=create_channel_point_reward, args=(
+        args = [
             self.config["channelName"],
             reward["name"],
             reward["cost"],
@@ -260,9 +270,18 @@ class App():
             reward["maxPerStream"],
             reward["maxPerUserPerStream"],
             reward["cooldown"],
-            reward["maxPerStreamEnabled"],
+            reward.get("maxPerStreamEnabled", False),
             log_message
-        ))
+        ]
+
+        # Optionally add isUserInputRequired and prompt if they exist
+        if "isUserInputRequired" in reward:
+            args.append(reward["isUserInputRequired"])
+        if "prompt" in reward:
+            args.append(reward["prompt"])
+
+        # Start the thread with the prepared arguments
+        create_reward_thread = threading.Thread(target=create_channel_point_reward, args=tuple(args))
         create_reward_thread.start()
         log_message(f"Created channel point reward {reward['name']}")
 
@@ -277,7 +296,7 @@ class App():
 
     def handle_version(self):
         log_message(f"MP Twitch Control: v{getVersion()}")
-        
+
     def twitch_connect(self, arg, arg2):
         if self.config["channelName"] == "" and self.config["token"] == "":
             update_config_if_empty('config.json5', 'channelName', arg)

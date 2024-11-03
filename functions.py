@@ -1,6 +1,7 @@
 import requests
 import json5
 import sys
+import dolphin_memory_engine
 
 if sys.platform == "win32":
     import win32gui
@@ -131,3 +132,15 @@ def format_game_name_camel(module_name):
     if formatted_name and not formatted_name[0].isupper():
         formatted_name = formatted_name[0].upper() + formatted_name[1:]
     return formatted_name
+
+def write_bytes(address, value, size=1):
+    dolphin_memory_engine.write_bytes(address, value.to_bytes(size, byteorder='big'))
+
+def read_bytes(address, size=1):
+    return int.from_bytes(dolphin_memory_engine.read_bytes(address, size), byteorder='big')
+
+def update_value(address, increment, min_value=0, max_value=999):
+    current_value = read_bytes(address, 2)
+    new_value = max(min(current_value + increment, max_value), min_value)
+    write_bytes(address, new_value, 2)
+    return new_value

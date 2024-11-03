@@ -6,3 +6,4 @@ dolphin-memory-engine-mpn
 json5
 requests
 pywin32
+Pillow

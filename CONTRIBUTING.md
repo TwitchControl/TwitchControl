@@ -5,10 +5,9 @@ Thank you for your interest in contributing to Twitch Control! We welcome contri
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-2. [Developing for Twitch Control](#developing-for-twitch-control)
-3. [Creating Your Own Plugin](#creating-your-own-plugin)
-4. [Submitting Your Plugin](#submitting-your-plugin)
-5. [Code of Conduct](#code-of-conduct)
+2. [Creating Your Own Plugin](#creating-your-own-plugin)
+3. [Submitting Your Plugin](#submitting-your-plugin)
+4. [Code of Conduct](#code-of-conduct)
 
 ## Getting Started
 

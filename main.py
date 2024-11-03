@@ -153,12 +153,12 @@ class App():
                     plugins.append(game_name)
 
         game_names = [format_game_name(f) for f in plugins]
-
+    
         for game in plugins:
             try:
                 print()
                 # Attempt to import the module from the 'plugins' package
-                module = importlib.import_module(f'plugins.{game[0].upper() + game[1:]}.{game}')
+                module = importlib.import_module('plugins.marioParty4.marioParty4')
                 log_message(f'Loaded Plugin: {format_game_name(game)}')
                 self.on_game_selected(game)
             except ModuleNotFoundError:

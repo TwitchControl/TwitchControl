@@ -2,99 +2,450 @@ import dolphin_memory_engine
 import random
 import math
 import time
-from functions import read_bytes, write_bytes, update_value
 
 def loadGame(config, event, log_message):
-    reward_title = event.reward.title
+    if event.reward.title == config["rewards"][0]["name"]:
+        maxTurns = dolphin_memory_engine.read_bytes(0x8018FCFD, 1)
+        maxTurnsPlusOne = int.from_bytes(maxTurns, byteorder='big') + 1
+        if maxTurnsPlusOne > 50:
+            maxTurnsPlusOne = 50
+        dolphin_memory_engine.write_bytes(0x8018FCFD, maxTurnsPlusOne.to_bytes(1, byteorder='big'))
+        log_message(f'Max Turns increased to: {maxTurnsPlusOne}')
 
-    def distribute_excess_coins(base_address, total_coins, num_players=4):
-        base_amount = total_coins // num_players
-        excess_coins = total_coins % num_players
-        addresses = [base_address + i * 0x30 for i in range(num_players)]
-        for address in addresses:
-            write_bytes(address, base_amount, 2)
-        if excess_coins > 0:
-            chosen_players = random.sample(range(num_players), excess_coins)
+    if event.reward.title == config["rewards"][1]["name"]:
+        dolphin_memory_engine.write_bytes(0x8018FC3D, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC3E, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC3F, (255).to_bytes(1, byteorder='big'))
+
+    if event.reward.title == config["rewards"][2]["name"]:
+        dolphin_memory_engine.write_bytes(0x8018FC6D, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC6E, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC6F, (255).to_bytes(1, byteorder='big'))
+
+    if event.reward.title == config["rewards"][3]["name"]:
+        dolphin_memory_engine.write_bytes(0x8018FC9D, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC9E, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC9F, (255).to_bytes(1, byteorder='big'))
+
+    if event.reward.title == config["rewards"][4]["name"]:
+        dolphin_memory_engine.write_bytes(0x8018FCCD, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCCE, (255).to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCCF, (255).to_bytes(1, byteorder='big'))
+
+    if event.reward.title == config["rewards"][5]["name"]:
+        coinP1 = dolphin_memory_engine.read_bytes(0x8018FC54, 2)
+        currentCoinsP1 = int.from_bytes(coinP1, byteorder='big')
+        if currentCoinsP1 > 978:
+            thirtyLostCoinsP1 = 999
+        else:
+            thirtyLostCoinsP1 = currentCoinsP1 + 20
+        dolphin_memory_engine.write_bytes(0x8018FC54, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P1: {thirtyLostCoinsP1}')
+
+    if event.reward.title == config["rewards"][6]["name"]:
+        coinP2 = dolphin_memory_engine.read_bytes(0x8018FC84, 2)
+        currentCoinsP2 = int.from_bytes(coinP2, byteorder='big')
+        if currentCoinsP2 > 978:
+            thirtyLostCoinsP2 = 999
+        else:
+            thirtyLostCoinsP2 = currentCoinsP2 + 20
+        dolphin_memory_engine.write_bytes(0x8018FC84, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P2: {thirtyLostCoinsP2}')
+
+    if event.reward.title == config["rewards"][7]["name"]:
+        coinP3 = dolphin_memory_engine.read_bytes(0x8018FCB4, 2)
+        currentCoinsP3 = int.from_bytes(coinP3, byteorder='big')
+        if currentCoinsP3 > 978:
+            thirtyLostCoinsP3 = 999
+        else:
+            thirtyLostCoinsP3 = currentCoinsP3 + 20
+        dolphin_memory_engine.write_bytes(0x8018FCB4, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P3: {thirtyLostCoinsP3}')
+
+    if event.reward.title == config["rewards"][8]["name"]:
+        coinP4 = dolphin_memory_engine.read_bytes(0x8018FCE4, 2)
+        currentCoinsP4 = int.from_bytes(coinP4, byteorder='big')
+        if currentCoinsP4 > 978:
+            thirtyLostCoinsP4 = 999
+        else:
+            thirtyLostCoinsP4 = currentCoinsP4 + 20
+        dolphin_memory_engine.write_bytes(0x8018FCE4, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P4: {thirtyLostCoinsP4}')
+
+    if event.reward.title == config["rewards"][9]["name"]:
+        thirtyLostCoinsP1 = int.from_bytes(coinP1, byteorder='big')
+        if thirtyLostCoinsP1 > 998:
+            thirtyLostCoinsP1 = 999
+        else:
+            thirtyLostCoinsP1 = thirtyLostCoinsP1 + 1
+        dolphin_memory_engine.write_bytes(0x8018FC62, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P1: {thirtyLostCoinsP1}')
+
+    if event.reward.title == config["rewards"][10]["name"]:
+        coinP2 = dolphin_memory_engine.read_bytes(0x8018FC92, 2)
+        thirtyLostCoinsP2 = int.from_bytes(coinP2, byteorder='big')
+        if thirtyLostCoinsP2 > 998:
+            thirtyLostCoinsP2 = 999
+        else:
+            thirtyLostCoinsP2 = thirtyLostCoinsP2 + 1
+        dolphin_memory_engine.write_bytes(0x8018FC92, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P2: {thirtyLostCoinsP2}')
+
+    if event.reward.title == config["rewards"][11]["name"]:
+        coinP3 = dolphin_memory_engine.read_bytes(0x8018FCC2, 2)
+        thirtyLostCoinsP3 = int.from_bytes(coinP3, byteorder='big')
+        if thirtyLostCoinsP3 > 998:
+            thirtyLostCoinsP3 = 999
+        else:
+            thirtyLostCoinsP3 = thirtyLostCoinsP3 + 1
+        thirtyLostCoinsP3 = thirtyLostCoinsP3 + 1
+        dolphin_memory_engine.write_bytes(0x8018FCC2, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P3: {thirtyLostCoinsP3}')
+
+    if event.reward.title == config["rewards"][12]["name"]:
+        coinP4 = dolphin_memory_engine.read_bytes(0x8018FCF2, 2)
+        thirtyLostCoinsP4 = int.from_bytes(coinP4, byteorder='big')
+        if thirtyLostCoinsP4 > 998:
+            thirtyLostCoinsP4 = 999
+        else:
+            thirtyLostCoinsP4 = thirtyLostCoinsP4 + 1
+        dolphin_memory_engine.write_bytes(0x8018FCF2, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P4: {thirtyLostCoinsP4}')
+
+    if event.reward.title == config["rewards"][13]["name"]:
+        coinP1 = dolphin_memory_engine.read_bytes(0x8018FC54, 2)
+        coinP2 = dolphin_memory_engine.read_bytes(0x8018FC84, 2)
+        coinP3 = dolphin_memory_engine.read_bytes(0x8018FCB4, 2)
+        coinP4 = dolphin_memory_engine.read_bytes(0x8018FCE4, 2)
+        totalCoins = (int.from_bytes(coinP1, byteorder='big') +
+                      int.from_bytes(coinP2, byteorder='big') + 
+                      int.from_bytes(coinP3, byteorder='big') + 
+                      int.from_bytes(coinP4, byteorder='big'))
+        revParsed = math.floor(totalCoins / 4)
+        dolphin_memory_engine.write_bytes(0x8018FC54, revParsed.to_bytes(2, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC84, revParsed.to_bytes(2, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCB4, revParsed.to_bytes(2, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCE4, revParsed.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins after Revolution: {revParsed}')
+
+    if event.reward.title == config["rewards"][14]["name"]:
+        coinP1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC62, 2), byteorder='big')
+        coinP2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC92, 2), byteorder='big')
+        coinP3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCC2, 2), byteorder='big')
+        coinP4 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCF2, 2), byteorder='big')
+        totalCoins = coinP1 + coinP2 + coinP3 + coinP4
+        baseAmount = totalCoins // 4
+        excessCoins = totalCoins % 4
+        dolphin_memory_engine.write_bytes(0x8018FC62, baseAmount.to_bytes(2, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC92, baseAmount.to_bytes(2, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCC2, baseAmount.to_bytes(2, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCF2, baseAmount.to_bytes(2, byteorder='big'))
+        if excessCoins > 0:
+            players = ['P1', 'P2', 'P3', 'P4']
+            chosen_players = random.sample(players, excessCoins)
             for player in chosen_players:
-                write_bytes(addresses[player], base_amount + 1, 2)
-            log_message(f'Excess coins distributed to players: {chosen_players}')
+                if player == 'P1':
+                    dolphin_memory_engine.write_bytes(0x8018FC62, (baseAmount + 1).to_bytes(2, byteorder='big'))
+                elif player == 'P2':
+                    dolphin_memory_engine.write_bytes(0x8018FC92, (baseAmount + 1).to_bytes(2, byteorder='big'))
+                elif player == 'P3':
+                    dolphin_memory_engine.write_bytes(0x8018FCC2, (baseAmount + 1).to_bytes(2, byteorder='big'))
+                elif player == 'P4':
+                    dolphin_memory_engine.write_bytes(0x8018FCF2, (baseAmount + 1).to_bytes(2, byteorder='big'))
+            log_message(f'Excess coins distributed to: {", ".join(chosen_players)}')
         else:
             log_message("No excess coins to distribute.")
 
-    if reward_title == "Add One Turn":
-        max_turns = read_bytes(0x8018FCFD)
-        max_turns_plus_one = min(max_turns + 1, 50)
-        write_bytes(0x8018FCFD, max_turns_plus_one)
-        log_message(f'Max Turns increased to: {max_turns_plus_one}')
-
-    elif reward_title in ["Wipe P1 Items", "Wipe P2 Items", "Wipe P3 Items", "Wipe P4 Items"]:
-        player_index = ["Wipe P1 Items", "Wipe P2 Items", "Wipe P3 Items", "Wipe P4 Items"].index(reward_title)
-        base_address = 0x8018FC3D + player_index * 0x30
-        for offset in range(3):
-            write_bytes(base_address + offset, 255)
-
-    elif reward_title in ["+20 Coins P1", "+20 Coins P2", "+20 Coins P3", "+20 Coins P4"]:
-        player_index = ["+20 Coins P1", "+20 Coins P2", "+20 Coins P3", "+20 Coins P4"].index(reward_title)
-        address = 0x8018FC54 + player_index * 0x30
-        new_coins = update_value(address, 20, 0, 999)
-        log_message(f'New Coins P{player_index + 1}: {new_coins}')
-
-    elif reward_title in ["+1 Star P1", "+1 Star P2", "+1 Star P3", "+1 Star P4"]:
-        player_index = ["+1 Star P1", "+1 Star P2", "+1 Star P3", "+1 Star P4"].index(reward_title)
-        address = 0x8018FC62 + player_index * 0x30
-        new_stars = update_value(address, 20, 0, 999)
-        log_message(f'New Stars P{player_index + 1}: {new_stars}')
-
-    elif reward_title == "Coin Revolution":
-        total_coins = sum(read_bytes(0x8018FC54 + i * 0x30, 2) for i in range(4))
-        distribute_excess_coins(0x8018FC54, total_coins)
-
-    elif reward_title == "Star Revolution":
-        total_stars = sum(read_bytes(0x8018FC62 + i * 0x30, 2) for i in range(4))
-        distribute_excess_coins(0x8018FC62, total_stars)
-
-    elif reward_title in ["Give P1 1 Item", "Give P2 1 Item", "Give P3 1 Item", "Give P4 1 Item"]:
-        player_index = ["Give P1 1 Item", "Give P2 1 Item", "Give P3 1 Item", "Give P4 1 Item"].index(reward_title)
-        base_address = 0x8018FC3D + player_index * 0x30
-        dx_items = config["rewards"][15]["dxItems"] == "True"
-        hex_values = [f"{i:02X}" for i in range(0x24 if dx_items else 0x0D)]
+    if event.reward.title == config["rewards"][15]["name"]:
+        item1 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
+        item2 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
+        item3 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
+        if config["rewards"][15]["dxItems"] == "True":
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
+                "15", "16", "17", "18", "19", "1A", "1B", "1C", "1D", "1E",
+                "1F", "20", "21", "22", "23"
+            ]
+        else:
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C"
+            ]
         random_hex = random.choice(hex_values)
-        for offset in range(3):
-            if read_bytes(base_address + offset) == 255:
-                write_bytes(base_address + offset, int(random_hex, 16))
-                break
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3D, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC3D, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3E, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC3E, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3F, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC3F, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    elif reward_title in ["-20 Coins P1", "-20 Coins P2", "-20 Coins P3", "-20 Coins P4"]:
-        player_index = ["-20 Coins P1", "-20 Coins P2", "-20 Coins P3", "-20 Coins P4"].index(reward_title)
-        address = 0x8018FC54 + player_index * 0x30
-        new_coins = update_value(address, -20, 0, 999)
-        log_message(f'New Coins P{player_index + 1}: {new_coins}')
+    if event.reward.title == config["rewards"][16]["name"]:
+        item1 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
+        item2 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
+        item3 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
+        if config["rewards"][16]["dxItems"] == "True":
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
+                "15", "16", "17", "18", "19", "1A", "1B", "1C", "1D", "1E",
+                "1F", "20", "21", "22", "23"
+            ]
+        else:
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C"
+            ]
+        random_hex = random.choice(hex_values)
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6D, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC6D, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6E, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC6E, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6F, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC6F, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    elif reward_title in ["-1 Star P1", "-1 Star P2", "-1 Star P3", "-1 Star P4"]:
-        player_index = ["-1 Star P1", "-1 Star P2", "-1 Star P3", "-1 Star P4"].index(reward_title)
-        address = 0x8018FC62 + player_index * 0x30
-        new_stars = update_value(address, -1, 0, 999)
-        log_message(f'New Stars P{player_index + 1}: {new_stars}')
+    if event.reward.title == config["rewards"][17]["name"]:
+        item1 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
+        item2 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
+        item3 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
+        if config["rewards"][17]["dxItems"] == "True":
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
+                "15", "16", "17", "18", "19", "1A", "1B", "1C", "1D", "1E",
+                "1F", "20", "21", "22", "23"
+            ]
+        else:
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C"
+            ]
+        random_hex = random.choice(hex_values)
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9D, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC9D, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9E, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC9E, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9F, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FC9F, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    elif reward_title == "Redistribute ALL Items":
-        items = [read_bytes(0x8018FC3D + i * 0x30 + j) for i in range(4) for j in range(3)]
-        random.shuffle(items)
-        for i in range(4):
-            sorted_items = sorted(items[i * 3:(i + 1) * 3])
-            for j, item in enumerate(sorted_items):
-                write_bytes(0x8018FC3D + i * 0x30 + j, item)
+    if event.reward.title == config["rewards"][18]["name"]:
+        item1 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
+        item2 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
+        item3 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
+        if config["rewards"][17]["dxItems"] == "True":
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
+                "15", "16", "17", "18", "19", "1A", "1B", "1C", "1D", "1E",
+                "1F", "20", "21", "22", "23"
+            ]
+        else:
+            hex_values = [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "0A", "0B", "0C"
+            ]
+        random_hex = random.choice(hex_values)
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCD, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FCCD, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCE, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FCCE, int(random_hex, 16).to_bytes(1, byteorder='big'))
+        elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCF, 1), byteorder='big') == 255:
+            dolphin_memory_engine.write_bytes(0x8018FCCF, int(random_hex, 16).to_bytes(1, byteorder='big'))
+
+    if event.reward.title == config["rewards"][19]["name"]:
+        coinP1 = dolphin_memory_engine.read_bytes(0x8018FC54, 2)
+        currentCoinsP1 = int.from_bytes(coinP1, byteorder='big')
+        if currentCoinsP1 < 20:
+            thirtyLostCoinsP1 = 0
+        else:
+            thirtyLostCoinsP1 = currentCoinsP1 - 20
+        dolphin_memory_engine.write_bytes(0x8018FC54, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P1: {thirtyLostCoinsP1}')
+
+    if event.reward.title == config["rewards"][20]["name"]:
+        coinP2 = dolphin_memory_engine.read_bytes(0x8018FC84, 2)
+        currentCoinsP2 = int.from_bytes(coinP2, byteorder='big')
+        if currentCoinsP2 < 20:
+            thirtyLostCoinsP3 = 0
+        else:
+            thirtyLostCoinsP2 = currentCoinsP2 - 20
+        dolphin_memory_engine.write_bytes(0x8018FC84, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P2: {thirtyLostCoinsP2}')
+
+    if event.reward.title == config["rewards"][21]["name"]:
+        coinP3 = dolphin_memory_engine.read_bytes(0x8018FCB4, 2)
+        currentCoinsP3 = int.from_bytes(coinP3, byteorder='big')
+        if currentCoinsP3 < 20:
+            thirtyLostCoinsP3 = 0
+        else:
+            thirtyLostCoinsP3 = currentCoinsP3 - 20
+        dolphin_memory_engine.write_bytes(0x8018FCB4, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P3: {thirtyLostCoinsP3}')
+
+    if event.reward.title == config["rewards"][22]["name"]:
+        coinP4 = dolphin_memory_engine.read_bytes(0x8018FCE4, 2)
+        currentCoinsP4 = int.from_bytes(coinP4, byteorder='big')
+        if currentCoinsP4 < 20:
+            thirtyLostCoinsP4 = 0
+        else:
+            thirtyLostCoinsP4 = currentCoinsP4 - 20
+        dolphin_memory_engine.write_bytes(0x8018FCE4, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
+        log_message(f'New Coins P4: {thirtyLostCoinsP4}')
+
+    if event.reward.title == config["rewards"][23]["name"]:
+        coinP1 = dolphin_memory_engine.read_bytes(0x8018FC62, 2)
+        thirtyLostCoinsP1 = int.from_bytes(coinP1, byteorder='big')
+        if thirtyLostCoinsP1 > 1:
+            thirtyLostCoinsP1 = 0
+        else:
+            thirtyLostCoinsP1 = thirtyLostCoinsP1 - 1
+        dolphin_memory_engine.write_bytes(0x8018FC62, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P1: {thirtyLostCoinsP1}')
+
+    if event.reward.title == config["rewards"][24]["name"]:
+        coinP2 = dolphin_memory_engine.read_bytes(0x8018FC92, 2)
+        thirtyLostCoinsP2 = int.from_bytes(coinP2, byteorder='big')
+        if thirtyLostCoinsP2 > 1:
+            thirtyLostCoinsP2 = 0
+        else:
+            thirtyLostCoinsP2 = thirtyLostCoinsP2 - 1
+        dolphin_memory_engine.write_bytes(0x8018FC92, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P2: {thirtyLostCoinsP2}')
+
+    if event.reward.title == config["rewards"][25]["name"]:
+        coinP3 = dolphin_memory_engine.read_bytes(0x8018FCC2, 2)
+        thirtyLostCoinsP3 = int.from_bytes(coinP3, byteorder='big')
+        if thirtyLostCoinsP3 > 1:
+            thirtyLostCoinsP3 = 0
+        else:
+            thirtyLostCoinsP3 = thirtyLostCoinsP3 - 1
+        dolphin_memory_engine.write_bytes(0x8018FCC2, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P3: {thirtyLostCoinsP3}')
+
+    if event.reward.title == config["rewards"][26]["name"]:
+        coinP4 = dolphin_memory_engine.read_bytes(0x8018FCF2, 2)
+        thirtyLostCoinsP4 = int.from_bytes(coinP4, byteorder='big')
+        if thirtyLostCoinsP4 > 1:
+            thirtyLostCoinsP4 = 0
+        else:
+            thirtyLostCoinsP4 = thirtyLostCoinsP4 - 1
+        dolphin_memory_engine.write_bytes(0x8018FCF2, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
+        log_message(f'New Stars P4: {thirtyLostCoinsP4}')
+
+    if event.reward.title == config["rewards"][27]["name"]:
+        p1Item1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3D, 1), byteorder='big')
+        p1Item2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3E, 1), byteorder='big')
+        p1Item3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3F, 1), byteorder='big')
+        p2Item1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6D, 1), byteorder='big')
+        p2Item2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6E, 1), byteorder='big')
+        p2Item3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6F, 1), byteorder='big')
+        p3Item1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9D, 1), byteorder='big')
+        p3Item2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9E, 1), byteorder='big')
+        p3Item3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9F, 1), byteorder='big')
+        p4Item1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCD, 1), byteorder='big')
+        p4Item2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCE, 1), byteorder='big')
+        p4Item3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCF, 1), byteorder='big')
+        hex_values = [
+            p1Item1, p1Item2, p1Item3,
+            p2Item1, p2Item2, p2Item3,
+            p3Item1, p3Item2, p3Item3,
+            p4Item1, p4Item2, p4Item3
+        ]
+        random_selections = random.sample(hex_values, 12)
+        hex_values_p1 = [
+            random_selections[0], random_selections[1], random_selections[2]
+        ]
+        hex_values_p2 = [
+            random_selections[3], random_selections[4], random_selections[5]
+        ]
+        hex_values_p3 = [
+            random_selections[6], random_selections[7], random_selections[8]
+        ]
+        hex_values_p4 = [
+            random_selections[9], random_selections[10], random_selections[11]
+        ]
+        hex_values_p1.sort()
+        hex_values_p2.sort()
+        hex_values_p3.sort()
+        hex_values_p4.sort()
+        dolphin_memory_engine.write_bytes(0x8018FC3D, hex_values_p1[0].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC3E, hex_values_p1[1].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC3F, hex_values_p1[2].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC6D, hex_values_p2[0].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC6E, hex_values_p2[1].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC6F, hex_values_p2[2].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC9D, hex_values_p3[0].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC9E, hex_values_p3[1].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FC9F, hex_values_p3[2].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCCD, hex_values_p4[0].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCCE, hex_values_p4[1].to_bytes(1, byteorder='big'))
+        dolphin_memory_engine.write_bytes(0x8018FCCF, hex_values_p4[2].to_bytes(1, byteorder='big'))
         log_message('Item Revolution Complete')
 
-    elif reward_title in ["Lock P1 Dice", "Lock P2 Dice", "Lock P3 Dice", "Lock P4 Dice"]:
-        player_index = ["Lock P1 Dice", "Lock P2 Dice", "Lock P3 Dice", "Lock P4 Dice"].index(reward_title)
-        roll = max(1, min(event.input, 20))
-        roll_hex = int(roll)
-        while read_bytes(0x8018FD02) != player_index:
+    if event.reward.title == config["rewards"][28]["name"]:
+        roll = event.input
+        if roll > 19:
+            roll = 20
+        if roll == 0:
+            roll = 1
+        roll_hex = hex(roll)[2:]
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 0:
             time.sleep(0.2)
-        while read_bytes(0x801D40A2) == 0:
-            write_bytes(0x80086970, 26)
-            write_bytes(0x80086971, 0)
-            write_bytes(0x80086972, 0)
-            write_bytes(0x80086973, roll_hex)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            dolphin_memory_engine.write_bytes(0x80086970, (26).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
             time.sleep(0.2)
-            log_message(f'Triggering: Locked P{player_index + 1} Dice to {roll}')
+            log_message('Triggering: Locked P1 Dice to ' + str(roll))
+
+    if event.reward.title == config["rewards"][29]["name"]:
+        roll = event.input
+        if roll > 19:
+            roll = 20
+        if roll == 0:
+            roll = 1
+        roll_hex = hex(roll)[2:]
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 1:
+            time.sleep(0.2)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            dolphin_memory_engine.write_bytes(0x80086970, (26).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
+            time.sleep(0.2)
+            log_message('Triggering: Locked P2 Dice to ' + str(roll))
+
+    if event.reward.title == config["rewards"][30]["name"]:
+        roll = event.input
+        if roll > 19:
+            roll = 20
+        if roll == 0:
+            roll = 1
+        roll_hex = hex(roll)[2:]
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 2:
+            time.sleep(0.2)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            dolphin_memory_engine.write_bytes(0x80086970, (26).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
+            time.sleep(0.2)
+            log_message('Triggering: Locked P3 Dice to ' + str(roll))
+
+    if event.reward.title == config["rewards"][31]["name"]:
+        roll = event.input
+        if roll > 19:
+            roll = 20
+        if roll == 0:
+            roll = 1
+        roll_hex = hex(roll)[2:]
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 3:
+            time.sleep(0.2)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            dolphin_memory_engine.write_bytes(0x80086970, (26).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
+            dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
+            time.sleep(0.2)
+            log_message('Triggering: Locked P4 Dice to ' + str(roll))

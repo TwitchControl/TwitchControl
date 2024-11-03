@@ -129,7 +129,7 @@ class App():
         self.submit_button = customtkinter.CTkButton(self.window, text="Submit", command=self.submit_command)
         self.submit_button.pack(side="right", padx=10, pady=5)
 
-        log_message(f"Mario Party 4 - Twitch Control Shell:")
+        log_message(f"Twitch Control Shell:")
         log_message(f"Run /help for a list of commands")
 
         self.connected_to_dolphin = False
@@ -295,7 +295,7 @@ class App():
             log_message("No channel is linked.")
 
     def handle_version(self):
-        log_message(f"MP Twitch Control: v{getVersion()}")
+        log_message(f"Twitch Control: v{getVersion()}")
 
     def twitch_connect(self, arg, arg2):
         if self.config["channelName"] == "" and self.config["token"] == "":

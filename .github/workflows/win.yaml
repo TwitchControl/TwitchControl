@@ -33,7 +33,6 @@ jobs:
       run: |
         pyinstaller --onefile .\main.py \
                     --include-submodules \
-                    --add-data "plugins/*/*.json;plugins/*/" \
                     --name="Twitch Control" \
                     -w
         mkdir dist\plugins

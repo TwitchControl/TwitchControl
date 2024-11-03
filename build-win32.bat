@@ -8,5 +8,12 @@ REM Update version.py with the git hash
 echo def getVersion(): > version.py
 echo     return "%%GIT_HASH%%" >> version.py
 
-pyinstaller --onefile .\main.py --include-data "plugins/*/*.json5;plugins/*" --name="Twitch Control" -w
+pyinstaller --onefile .\main.py --name="Twitch Control" -w && 
 mkdir dist\plugins
+
+for /R plugins %%f in (*.json5) do (
+    set "relPath=%%f"
+    call set "relPath=%%relPath:plugins\=%%"
+    call mkdir "dist\plugins\%%~dprelPath%%"
+    copy "%%f" "dist\plugins\%%~dprelPath%%"
+)

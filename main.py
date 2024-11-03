@@ -61,7 +61,7 @@ class App():
 
         # Create GUI window
         self.window = customtkinter.CTk()
-        self.window.title("Twitch Control")
+        self.window.title(f"Twitch Control ({getVersion()})")
         self.window.geometry("1080x720")
 
         self.client = twitchio.Client(token=self.token)

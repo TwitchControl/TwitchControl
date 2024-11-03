@@ -20,8 +20,16 @@ jobs:
     - name: Install PIP Modules
       run: python -m pip install -r requirements.txt
 
+    - name: Get Git Short Hash
+      run: |
+        FOR /F "tokens=*" %%i IN ('git rev-parse --short HEAD') DO (
+          SET GIT_HASH=%%i
+          echo def getVersion(): > version.py
+          echo     return "%%GIT_HASH%%" >> version.py
+        )
+
     - name: Build Project
-      run: pyinstaller --onefile .\main.py --name="Twitch Control" -w --icon="icon.ico"
+      run: pyinstaller --onefile .\main.py --name="Twitch Control" -w && mkdir dist\plugins
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4

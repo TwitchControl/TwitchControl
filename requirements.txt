@@ -1,0 +1,8 @@
+twitchio
+customtkinter
+tk
+pyinstaller
+dolphin-memory-engine-mpn
+json5
+requests
+pywin32

@@ -1,0 +1,3 @@
+[submodule "plugins/MarioParty4"]
+	path = plugins/MarioParty4
+	url = https://github.com/TwitchControl/MarioParty4

@@ -46,8 +46,8 @@ class App():
         config_path = 'config.json5'
         if not os.path.exists(config_path):
             dummy_data = {
-                "token": "dummy_token",
-                "channelName": "dummy_channel",
+                "token": "",
+                "channelName": "",
                 "selectedPlugin": "None"
             }
             with open(config_path, 'w') as config_file:
@@ -156,9 +156,8 @@ class App():
     
         for game in plugins:
             try:
-                print()
                 # Attempt to import the module from the 'plugins' package
-                module = importlib.import_module('plugins.marioParty4.marioParty4')
+                module = importlib.import_module(f'plugins.{game}.{game}')
                 log_message(f'Loaded Plugin: {format_game_name(game)}')
                 self.on_game_selected(game)
             except ModuleNotFoundError:
@@ -178,7 +177,7 @@ class App():
        
 
     def on_game_selected(self, selected_game):
-        log_message(f"Selected plugin: {selected_game}")
+        log_message(f"Selected plugin: {format_game_name(selected_game)}")
         
         # Save the selected plugin to the configuration
         self.config["selectedPlugin"] = selected_game
@@ -191,7 +190,6 @@ class App():
             camel_case_game = ''.join(word.capitalize() for word in words)
             with open(f'plugins/{lower_camel_case_game}/{camel_case_game}.json5', 'r') as game_config_file:
                 self.game_config = json5.load(game_config_file)
-            log_message(f"Loaded plugin for {selected_game}")
         except FileNotFoundError:
             log_message(f"Configuration file for plugin {selected_game} not found.")
         except json5.JSONDecodeError as e:

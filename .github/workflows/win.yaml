@@ -20,14 +20,14 @@ jobs:
     - name: Install PIP Modules
       run: python -m pip install -r requirements.txt
 
-    - name: Get Git Short Hash
+    - name: Store Hashes
+      uses: Im-Fran/git-hashes-action@v1.0.3
+      
+    - name: Post Hash
       run: |
-        FOR /F "tokens=*" %%i IN ('git rev-parse --short HEAD') DO (
-          SET GIT_HASH=%%i
-          echo def getVersion(): > version.py
-          echo     return "%%GIT_HASH%%" >> version.py
-        )
-
+        echo def getVersion(): > version.py
+        echo return "%%GIT_COMMIT_SHORT_HASH%%" >> version.py
+        
     - name: Build Project
       run: pyinstaller --onefile .\main.py --name="Twitch Control" -w && mkdir dist\plugins
 

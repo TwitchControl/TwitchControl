@@ -154,14 +154,7 @@ class App():
         sys.path.append(plugins_dir)
         
         # Load plugins
-        plugins = []
-
-        for root, dirs, files in os.walk(plugins_dir):
-            for file in files:
-                if file.endswith('.py') and file != '__init__.py':
-                    # Extract the game name from the file path
-                    game_name = os.path.splitext(file)[0]
-                    plugins.append(game_name)
+        plugins = ["marioParty4"]
 
         game_names = [format_game_name(f) for f in plugins]
     

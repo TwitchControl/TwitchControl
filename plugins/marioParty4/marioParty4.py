@@ -392,7 +392,7 @@ def loadGame(event, log_message):
             roll = 20
         if int(roll) == 0:
             roll = 1
-        roll_hex = hex(roll)[2:]
+        roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 0:
             time.sleep(0.2)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
@@ -409,7 +409,7 @@ def loadGame(event, log_message):
             roll = 20
         if int(roll) == 0:
             roll = 1
-        roll_hex = hex(roll)[2:]
+        roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 1:
             time.sleep(0.2)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
@@ -426,7 +426,7 @@ def loadGame(event, log_message):
             roll = 20
         if int(roll) == 0:
             roll = 1
-        roll_hex = hex(roll)[2:]
+        roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 2:
             time.sleep(0.2)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
@@ -443,7 +443,7 @@ def loadGame(event, log_message):
             roll = 20
         if int(roll) == 0:
             roll = 1
-        roll_hex = hex(roll)[2:]
+        roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 3:
             time.sleep(0.2)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:

@@ -400,7 +400,7 @@ def loadGame(event, log_message):
             dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
-            time.sleep(0.2)
+            time.sleep(0.025)
             log_message('Triggering: Locked P1 Dice to ' + str(roll))
 
     if event.reward.title == config["rewards"][29]["name"]:
@@ -417,7 +417,7 @@ def loadGame(event, log_message):
             dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
-            time.sleep(0.2)
+            time.sleep(0.025)
             log_message('Triggering: Locked P2 Dice to ' + str(roll))
 
     if event.reward.title == config["rewards"][30]["name"]:
@@ -434,7 +434,7 @@ def loadGame(event, log_message):
             dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
-            time.sleep(0.2)
+            time.sleep(0.025)
             log_message('Triggering: Locked P3 Dice to ' + str(roll))
 
     if event.reward.title == config["rewards"][31]["name"]:
@@ -452,5 +452,6 @@ def loadGame(event, log_message):
             dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
-            time.sleep(0.025)
-            log_message('Triggering: Locked P4 Dice to ' + str(roll)')
+            time.sleep(0.010)
+        log_message('Triggering: Locked P4 Dice to ' + str(roll)')
+                        

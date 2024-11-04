@@ -388,9 +388,9 @@ def loadGame(event, log_message):
 
     if event.reward.title == config["rewards"][28]["name"]:
         roll = event.input
-        if roll > 19:
+        if int(roll) > 19:
             roll = 20
-        if roll == 0:
+        if int(roll) == 0:
             roll = 1
         roll_hex = hex(roll)[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 0:

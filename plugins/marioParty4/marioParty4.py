@@ -8,7 +8,9 @@ def loadGame(event, log_message):
     with open('plugins/marioParty4/marioParty4.json5', 'r') as config_file:
             config = json5.load(config_file)
 
-    if event.reward.title == config["rewards"][0]["name"]:
+    reward_map = {reward["name"]: index for index, reward in enumerate(config["rewards"])}
+
+    if event.reward.title == config["rewards"][reward_map["Add One Turn"]]["name"]:
         maxTurns = dolphin_memory_engine.read_bytes(0x8018FCFD, 1)
         maxTurnsPlusOne = int.from_bytes(maxTurns, byteorder='big') + 1
         if maxTurnsPlusOne > 50:
@@ -16,27 +18,27 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCFD, maxTurnsPlusOne.to_bytes(1, byteorder='big'))
         log_message(f'Max Turns increased to: {maxTurnsPlusOne}')
 
-    if event.reward.title == config["rewards"][1]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Wipe P1 Items"]]["name"]:
         dolphin_memory_engine.write_bytes(0x8018FC3D, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FC3E, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FC3F, (255).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][2]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Wipe P2 Items"]]["name"]:
         dolphin_memory_engine.write_bytes(0x8018FC6D, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FC6E, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FC6F, (255).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][3]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Wipe P3 Items"]]["name"]:
         dolphin_memory_engine.write_bytes(0x8018FC9D, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FC9E, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FC9F, (255).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][4]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Wipe P4 Items"]]["name"]:
         dolphin_memory_engine.write_bytes(0x8018FCCD, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FCCE, (255).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8018FCCF, (255).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][5]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+20 Coins P1"]]["name"]:
         coinP1 = dolphin_memory_engine.read_bytes(0x8018FC54, 2)
         currentCoinsP1 = int.from_bytes(coinP1, byteorder='big')
         if currentCoinsP1 > 978:
@@ -46,7 +48,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC54, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P1: {thirtyLostCoinsP1}')
 
-    if event.reward.title == config["rewards"][6]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+20 Coins P2"]]["name"]:
         coinP2 = dolphin_memory_engine.read_bytes(0x8018FC84, 2)
         currentCoinsP2 = int.from_bytes(coinP2, byteorder='big')
         if currentCoinsP2 > 978:
@@ -56,7 +58,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC84, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P2: {thirtyLostCoinsP2}')
 
-    if event.reward.title == config["rewards"][7]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+20 Coins P3"]]["name"]:
         coinP3 = dolphin_memory_engine.read_bytes(0x8018FCB4, 2)
         currentCoinsP3 = int.from_bytes(coinP3, byteorder='big')
         if currentCoinsP3 > 978:
@@ -66,7 +68,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCB4, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P3: {thirtyLostCoinsP3}')
 
-    if event.reward.title == config["rewards"][8]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+20 Coins P4"]]["name"]:
         coinP4 = dolphin_memory_engine.read_bytes(0x8018FCE4, 2)
         currentCoinsP4 = int.from_bytes(coinP4, byteorder='big')
         if currentCoinsP4 > 978:
@@ -76,7 +78,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCE4, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P4: {thirtyLostCoinsP4}')
 
-    if event.reward.title == config["rewards"][9]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+1 Star P1"]]["name"]:
         thirtyLostCoinsP1 = int.from_bytes(coinP1, byteorder='big')
         if thirtyLostCoinsP1 > 998:
             thirtyLostCoinsP1 = 999
@@ -85,7 +87,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC62, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P1: {thirtyLostCoinsP1}')
 
-    if event.reward.title == config["rewards"][10]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+1 Star P2"]]["name"]:
         coinP2 = dolphin_memory_engine.read_bytes(0x8018FC92, 2)
         thirtyLostCoinsP2 = int.from_bytes(coinP2, byteorder='big')
         if thirtyLostCoinsP2 > 998:
@@ -95,7 +97,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC92, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P2: {thirtyLostCoinsP2}')
 
-    if event.reward.title == config["rewards"][11]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+1 Star P3"]]["name"]:
         coinP3 = dolphin_memory_engine.read_bytes(0x8018FCC2, 2)
         thirtyLostCoinsP3 = int.from_bytes(coinP3, byteorder='big')
         if thirtyLostCoinsP3 > 998:
@@ -106,7 +108,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCC2, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P3: {thirtyLostCoinsP3}')
 
-    if event.reward.title == config["rewards"][12]["name"]:
+    if event.reward.title == config["rewards"][reward_map["+1 Star P4"]]["name"]:
         coinP4 = dolphin_memory_engine.read_bytes(0x8018FCF2, 2)
         thirtyLostCoinsP4 = int.from_bytes(coinP4, byteorder='big')
         if thirtyLostCoinsP4 > 998:
@@ -116,7 +118,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCF2, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P4: {thirtyLostCoinsP4}')
 
-    if event.reward.title == config["rewards"][13]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Coin Revolution"]]["name"]:
         coinP1 = dolphin_memory_engine.read_bytes(0x8018FC54, 2)
         coinP2 = dolphin_memory_engine.read_bytes(0x8018FC84, 2)
         coinP3 = dolphin_memory_engine.read_bytes(0x8018FCB4, 2)
@@ -132,7 +134,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCE4, revParsed.to_bytes(2, byteorder='big'))
         log_message(f'New Coins after Revolution: {revParsed}')
 
-    if event.reward.title == config["rewards"][14]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Star Revolution"]]["name"]:
         coinP1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC62, 2), byteorder='big')
         coinP2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC92, 2), byteorder='big')
         coinP3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCC2, 2), byteorder='big')
@@ -160,11 +162,11 @@ def loadGame(event, log_message):
         else:
             log_message("No excess coins to distribute.")
 
-    if event.reward.title == config["rewards"][15]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Give P1 1 Item"]]["name"]:
         item1 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
-        if config["rewards"][15]["dxItems"] == "True":
+        if config["rewards"][reward_map["Give P1 1 Item"]]["dxItems"] == "True":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -184,11 +186,11 @@ def loadGame(event, log_message):
         elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3F, 1), byteorder='big') == 255:
             dolphin_memory_engine.write_bytes(0x8018FC3F, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][16]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Give P2 1 Item"]]["name"]:
         item1 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
-        if config["rewards"][16]["dxItems"] == "True":
+        if config["rewards"][reward_map["Give P2 1 Item"]]["dxItems"] == "True":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -208,11 +210,11 @@ def loadGame(event, log_message):
         elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC6F, 1), byteorder='big') == 255:
             dolphin_memory_engine.write_bytes(0x8018FC6F, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][17]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Give P3 1 Item"]]["name"]:
         item1 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
-        if config["rewards"][17]["dxItems"] == "True":
+        if config["rewards"][reward_map["Give P3 1 Item"]]["dxItems"] == "True":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -232,11 +234,11 @@ def loadGame(event, log_message):
         elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC9F, 1), byteorder='big') == 255:
             dolphin_memory_engine.write_bytes(0x8018FC9F, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][18]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Give P4 1 Item"]]["name"]:
         item1 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
-        if config["rewards"][17]["dxItems"] == "True":
+        if config["rewards"][reward_map["Give P4 1 Item"]]["dxItems"] == "True":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -256,7 +258,7 @@ def loadGame(event, log_message):
         elif int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FCCF, 1), byteorder='big') == 255:
             dolphin_memory_engine.write_bytes(0x8018FCCF, int(random_hex, 16).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][19]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-20 Coins P1"]]["name"]:
         coinP1 = dolphin_memory_engine.read_bytes(0x8018FC54, 2)
         currentCoinsP1 = int.from_bytes(coinP1, byteorder='big')
         if currentCoinsP1 < 20:
@@ -266,7 +268,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC54, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P1: {thirtyLostCoinsP1}')
 
-    if event.reward.title == config["rewards"][20]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-20 Coins P2"]]["name"]:
         coinP2 = dolphin_memory_engine.read_bytes(0x8018FC84, 2)
         currentCoinsP2 = int.from_bytes(coinP2, byteorder='big')
         if currentCoinsP2 < 20:
@@ -276,7 +278,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC84, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P2: {thirtyLostCoinsP2}')
 
-    if event.reward.title == config["rewards"][21]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-20 Coins P3"]]["name"]:
         coinP3 = dolphin_memory_engine.read_bytes(0x8018FCB4, 2)
         currentCoinsP3 = int.from_bytes(coinP3, byteorder='big')
         if currentCoinsP3 < 20:
@@ -286,7 +288,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCB4, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P3: {thirtyLostCoinsP3}')
 
-    if event.reward.title == config["rewards"][22]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-20 Coins P4"]]["name"]:
         coinP4 = dolphin_memory_engine.read_bytes(0x8018FCE4, 2)
         currentCoinsP4 = int.from_bytes(coinP4, byteorder='big')
         if currentCoinsP4 < 20:
@@ -296,7 +298,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCE4, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
         log_message(f'New Coins P4: {thirtyLostCoinsP4}')
 
-    if event.reward.title == config["rewards"][23]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-1 Star P1"]]["name"]:
         coinP1 = dolphin_memory_engine.read_bytes(0x8018FC62, 2)
         thirtyLostCoinsP1 = int.from_bytes(coinP1, byteorder='big')
         if thirtyLostCoinsP1 > 1:
@@ -306,7 +308,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC62, thirtyLostCoinsP1.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P1: {thirtyLostCoinsP1}')
 
-    if event.reward.title == config["rewards"][24]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-1 Star P2"]]["name"]:
         coinP2 = dolphin_memory_engine.read_bytes(0x8018FC92, 2)
         thirtyLostCoinsP2 = int.from_bytes(coinP2, byteorder='big')
         if thirtyLostCoinsP2 > 1:
@@ -316,7 +318,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FC92, thirtyLostCoinsP2.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P2: {thirtyLostCoinsP2}')
 
-    if event.reward.title == config["rewards"][25]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-1 Star P3"]]["name"]:
         coinP3 = dolphin_memory_engine.read_bytes(0x8018FCC2, 2)
         thirtyLostCoinsP3 = int.from_bytes(coinP3, byteorder='big')
         if thirtyLostCoinsP3 > 1:
@@ -326,7 +328,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCC2, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P3: {thirtyLostCoinsP3}')
 
-    if event.reward.title == config["rewards"][26]["name"]:
+    if event.reward.title == config["rewards"][reward_map["-1 Star P4"]]["name"]:
         coinP4 = dolphin_memory_engine.read_bytes(0x8018FCF2, 2)
         thirtyLostCoinsP4 = int.from_bytes(coinP4, byteorder='big')
         if thirtyLostCoinsP4 > 1:
@@ -336,7 +338,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCF2, thirtyLostCoinsP4.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P4: {thirtyLostCoinsP4}')
 
-    if event.reward.title == config["rewards"][27]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Redistribute ALL Items"]]["name"]:
         p1Item1 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3D, 1), byteorder='big')
         p1Item2 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3E, 1), byteorder='big')
         p1Item3 = int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FC3F, 1), byteorder='big')
@@ -386,7 +388,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8018FCCF, hex_values_p4[2].to_bytes(1, byteorder='big'))
         log_message('Item Revolution Complete')
 
-    if event.reward.title == config["rewards"][28]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Lock P1 Dice"]]["name"]:
         roll = event.input
         if int(roll) > 19:
             roll = 20
@@ -408,7 +410,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][29]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Lock P2 Dice"]]["name"]:
         roll = event.input
         if int(roll) > 19:
             roll = 20
@@ -430,7 +432,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][30]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Lock P3 Dice"]]["name"]:
         roll = event.input
         if int(roll) > 19:
             roll = 20
@@ -452,7 +454,7 @@ def loadGame(event, log_message):
         dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
         dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
 
-    if event.reward.title == config["rewards"][31]["name"]:
+    if event.reward.title == config["rewards"][reward_map["Lock P4 Dice"]]["name"]:
         roll = event.input
         if int(roll) > 19:
             roll = 20

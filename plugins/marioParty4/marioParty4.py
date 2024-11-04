@@ -2,8 +2,13 @@ import dolphin_memory_engine
 import random
 import math
 import time
+import json5
 
-def loadGame(config, event, log_message, config):
+def loadGame(config, event, log_message):
+
+    with open('plugins/marioParty4/marioParty4.json5', 'r') as config_file:
+            config = json5.load(config_file)
+
     if event.reward.title == config["rewards"][0]["name"]:
         maxTurns = dolphin_memory_engine.read_bytes(0x8018FCFD, 1)
         maxTurnsPlusOne = int.from_bytes(maxTurns, byteorder='big') + 1

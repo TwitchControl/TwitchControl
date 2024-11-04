@@ -340,7 +340,7 @@ class TwitchBot(commands.Bot):
         async def event_pubsub_channel_points(event: pubsub.PubSubChannelPointsMessage):
             log_message(f'Received channel points event: {event.reward.title}')
             if self.config.get("selectedPlugin", "None") == "Mario Party 4":
-                marioParty4.loadGame(self.config, event, log_message, self.config)
+                marioParty4.loadGame(event, log_message)
 
     async def subscribe_to_topics(self, client):
         topics = [

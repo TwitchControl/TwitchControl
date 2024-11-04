@@ -4,8 +4,7 @@ import math
 import time
 import json5
 
-def loadGame(config, event, log_message):
-
+def loadGame(event, log_message):
     with open('plugins/marioParty4/marioParty4.json5', 'r') as config_file:
             config = json5.load(config_file)
 

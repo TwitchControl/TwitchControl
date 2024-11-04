@@ -445,15 +445,15 @@ def loadGame(event, log_message):
             roll = 1
         roll_hex = hex(int(roll))[2:]
         roll_hex = hex(int(roll))[2:]
-        log_message('Triggering: Locked P4 Dice to ' + str(roll) + '1/3')
+        log_message('Triggering: Locked P4 Dice to ' + str(roll) + ' 1/3')
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 3:
             time.sleep(0.2)
-        log_message('Triggering: Locked P4 Dice to ' + str(roll) + '2/3')
+        log_message('Triggering: Locked P4 Dice to ' + str(roll) + ' 2/3')
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
             dolphin_memory_engine.write_bytes(0x80086970, (26).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086971, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086972, (0).to_bytes(1, byteorder='big'))
             dolphin_memory_engine.write_bytes(0x80086973, int(roll_hex).to_bytes(1, byteorder='big'))
-            time.sleep(0.2)
-            log_message('Triggering: Locked P4 Dice to ' + str(roll))
-        log_message('Triggering: Locked P4 Dice to ' + str(roll) + '3/3')
+            time.sleep(0.025)
+            log_message('Triggering: Locked P4 Dice to ' + str(roll) + ' 3/3')
+        log_message('Triggering: Locked P4 Dice to ' + str(roll) + ' Complete')

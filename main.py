@@ -356,7 +356,7 @@ class TwitchBot(commands.Bot):
     def register_events(self, client):
         @self.event()
         async def event_ready():
-            log_message(f'Logged in as: {selfnick}')
+            log_message(f'Logged in as: {self.nick}')
             await self.subscribe_to_topics(client)
 
     async def run_bot(self):

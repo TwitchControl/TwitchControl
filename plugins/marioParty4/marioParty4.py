@@ -395,7 +395,7 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
-        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x801D3CE3, 1), byteorder='big') <= 95):
             time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 0:
             time.sleep(0.25)
@@ -413,7 +413,7 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
-        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x801D3CE3, 1), byteorder='big') <= 95):
             time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 1:
             time.sleep(0.25)
@@ -431,7 +431,7 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
-        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x801D3CE3, 1), byteorder='big') <= 95):
             time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 2:
             time.sleep(0.25)
@@ -449,7 +449,7 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
-        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x801D3CE3, 1), byteorder='big') <= 95):
             time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 3:
             time.sleep(0.25)

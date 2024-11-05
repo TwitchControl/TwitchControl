@@ -157,7 +157,14 @@ class App():
             self.game_selection.set(self.selected_plugin)
         else:
             log_message("No modules loaded.")
-       
+
+        self.command_entry.bind("<Return>", self.submit_command)
+
+
+    def submit_command(self, event=None):
+        command = self.command_entry.get()
+        log_message(f"> {command}")
+        self.command_entry.delete(0, "end")
 
     def on_game_selected(self, selected_game):
         log_message(f"Selected plugin: {format_game_name(selected_game)}")

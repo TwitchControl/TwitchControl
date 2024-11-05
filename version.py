@@ -1,2 +1,2 @@
-def getVersion():
-    return "DEV"
+def getVersion(): 
+    return "Dev" 

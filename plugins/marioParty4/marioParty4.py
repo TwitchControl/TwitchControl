@@ -79,6 +79,7 @@ def loadGame(event, log_message):
         log_message(f'New Coins P4: {thirtyLostCoinsP4}')
 
     if event.reward.title == config["rewards"][reward_map["+1 Star P1"]]["name"]:
+        coinP1 = dolphin_memory_engine.read_bytes(0x8018FC62, 2)
         thirtyLostCoinsP1 = int.from_bytes(coinP1, byteorder='big')
         if thirtyLostCoinsP1 > 998:
             thirtyLostCoinsP1 = 999
@@ -104,7 +105,6 @@ def loadGame(event, log_message):
             thirtyLostCoinsP3 = 999
         else:
             thirtyLostCoinsP3 = thirtyLostCoinsP3 + 1
-        thirtyLostCoinsP3 = thirtyLostCoinsP3 + 1
         dolphin_memory_engine.write_bytes(0x8018FCC2, thirtyLostCoinsP3.to_bytes(2, byteorder='big'))
         log_message(f'New Stars P3: {thirtyLostCoinsP3}')
 
@@ -301,7 +301,7 @@ def loadGame(event, log_message):
     if event.reward.title == config["rewards"][reward_map["-1 Star P1"]]["name"]:
         coinP1 = dolphin_memory_engine.read_bytes(0x8018FC62, 2)
         thirtyLostCoinsP1 = int.from_bytes(coinP1, byteorder='big')
-        if thirtyLostCoinsP1 > 1:
+        if thirtyLostCoinsP1 < 1:
             thirtyLostCoinsP1 = 0
         else:
             thirtyLostCoinsP1 = thirtyLostCoinsP1 - 1
@@ -311,7 +311,7 @@ def loadGame(event, log_message):
     if event.reward.title == config["rewards"][reward_map["-1 Star P2"]]["name"]:
         coinP2 = dolphin_memory_engine.read_bytes(0x8018FC92, 2)
         thirtyLostCoinsP2 = int.from_bytes(coinP2, byteorder='big')
-        if thirtyLostCoinsP2 > 1:
+        if thirtyLostCoinsP2 < 1:
             thirtyLostCoinsP2 = 0
         else:
             thirtyLostCoinsP2 = thirtyLostCoinsP2 - 1
@@ -321,7 +321,7 @@ def loadGame(event, log_message):
     if event.reward.title == config["rewards"][reward_map["-1 Star P3"]]["name"]:
         coinP3 = dolphin_memory_engine.read_bytes(0x8018FCC2, 2)
         thirtyLostCoinsP3 = int.from_bytes(coinP3, byteorder='big')
-        if thirtyLostCoinsP3 > 1:
+        if thirtyLostCoinsP3 < 1:
             thirtyLostCoinsP3 = 0
         else:
             thirtyLostCoinsP3 = thirtyLostCoinsP3 - 1
@@ -331,7 +331,7 @@ def loadGame(event, log_message):
     if event.reward.title == config["rewards"][reward_map["-1 Star P4"]]["name"]:
         coinP4 = dolphin_memory_engine.read_bytes(0x8018FCF2, 2)
         thirtyLostCoinsP4 = int.from_bytes(coinP4, byteorder='big')
-        if thirtyLostCoinsP4 > 1:
+        if thirtyLostCoinsP4 < 1:
             thirtyLostCoinsP4 = 0
         else:
             thirtyLostCoinsP4 = thirtyLostCoinsP4 - 1
@@ -396,19 +396,15 @@ def loadGame(event, log_message):
             roll = 1
         roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 0:
-            time.sleep(0.2)
+            time.sleep(0.05)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696D, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696F, int(roll_hex, 16).to_bytes(1, byteorder='big'))
-            time.sleep(0.010)
-        time.sleep(2.5)
-        log_message('Triggering: Locked P1 Dice to ' + str(roll))
-        dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696D, (3).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
+            time.sleep(0.05)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            time.sleep(0.05)
+        Log_message('Triggering: Locked P4 Dice to ' + str(roll))
+        dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))
+
+
 
     if event.reward.title == config["rewards"][reward_map["Lock P2 Dice"]]["name"]:
         roll = event.input
@@ -418,19 +414,15 @@ def loadGame(event, log_message):
             roll = 1
         roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 1:
-            time.sleep(0.2)
+            time.sleep(0.05)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696D, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696F, int(roll_hex, 16).to_bytes(1, byteorder='big'))
-            time.sleep(0.010)
-        time.sleep(2.5)
-        log_message('Triggering: Locked P2 Dice to ' + str(roll))
-        dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696D, (3).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
+            time.sleep(0.05)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            time.sleep(0.05)
+        Log_message('Triggering: Locked P2 Dice to ' + str(roll))
+        dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))
+
+
 
     if event.reward.title == config["rewards"][reward_map["Lock P3 Dice"]]["name"]:
         roll = event.input
@@ -440,19 +432,15 @@ def loadGame(event, log_message):
             roll = 1
         roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 2:
-            time.sleep(0.2)
+            time.sleep(0.05)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696D, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696F, int(roll_hex, 16).to_bytes(1, byteorder='big'))
-            time.sleep(0.010)
-        time.sleep(2.5)
-        log_message('Triggering: Locked P3 Dice to ' + str(roll))
-        dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696D, (3).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
+            time.sleep(0.05)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            time.sleep(0.05)
+        Log_message('Triggering: Locked P3 Dice to ' + str(roll))
+        dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))
+
+
 
     if event.reward.title == config["rewards"][reward_map["Lock P4 Dice"]]["name"]:
         roll = event.input
@@ -462,15 +450,10 @@ def loadGame(event, log_message):
             roll = 1
         roll_hex = hex(int(roll))[2:]
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 3:
-            time.sleep(0.2)
+            time.sleep(0.05)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696D, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-            dolphin_memory_engine.write_bytes(0x8008696F, int(roll_hex, 16).to_bytes(1, byteorder='big'))
-        time.sleep(2.5)
-        log_message('Triggering: Locked P4 Dice to ' + str(roll))
-        dolphin_memory_engine.write_bytes(0x8008696C, (56).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696D, (3).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696E, (0).to_bytes(1, byteorder='big'))
-        dolphin_memory_engine.write_bytes(0x8008696F, (1).to_bytes(1, byteorder='big'))
+            time.sleep(0.05)
+        while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
+            time.sleep(0.05)
+        Log_message('Triggering: Locked P4 Dice to ' + str(roll))
+        dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))

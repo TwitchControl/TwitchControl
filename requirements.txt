@@ -1,7 +1,7 @@
 twitchio
 customtkinter
 tk
-pyinstaller
+pyinstaller == 6.0.0
 dolphin-memory-engine-mpn
 json5
 requests

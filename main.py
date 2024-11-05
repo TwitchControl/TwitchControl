@@ -160,12 +160,6 @@ class App():
 
         self.command_entry.bind("<Return>", self.submit_command)
 
-
-    def submit_command(self, event=None):
-        command = self.command_entry.get()
-        log_message(f"> {command}")
-        self.command_entry.delete(0, "end")
-
     def on_game_selected(self, selected_game):
         log_message(f"Selected plugin: {format_game_name(selected_game)}")
         
@@ -206,6 +200,8 @@ class App():
             self.handle_unlink()
         elif "/version" in command:
             self.handle_version()
+        elif command == "/config":  # New command to open config window
+            self.open_config_window()
         else:
             log_message(f"Unknown command. Type /help for a list of commands.")
 
@@ -215,7 +211,7 @@ class App():
         else:
             log_message("Already connected to dolphin.")
 
-    def handle_help(self):
+    def handle_help(self):  
         log_message("/connect - Connects to Dolphin.")
         log_message("/create - Creates the rewards on Twitch.")
         log_message("/disconnect - Disconnect from Dolphin")
@@ -360,7 +356,7 @@ class TwitchBot(commands.Bot):
     def register_events(self, client):
         @self.event()
         async def event_ready():
-            log_message(f'Logged in as: {self.nick}')
+            log_message(f'Logged in as: {selfnick}')
             await self.subscribe_to_topics(client)
 
     async def run_bot(self):

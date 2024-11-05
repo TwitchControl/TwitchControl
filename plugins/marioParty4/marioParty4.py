@@ -395,16 +395,16 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 0:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
-            time.sleep(0.001)
-        Log_message('Triggering: Locked P1 Dice to ' + str(roll))
+            time.sleep(0.25)
+        log_message('Triggering: Locked P1 Dice to ' + str(roll))
         dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))
-
-
 
     if event.reward.title == config["rewards"][reward_map["Lock P2 Dice"]]["name"]:
         roll = event.input
@@ -413,13 +413,15 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 1:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
-            time.sleep(0.001)
-        Log_message('Triggering: Locked P2 Dice to ' + str(roll))
+            time.sleep(0.25)
+        log_message('Triggering: Locked P2 Dice to ' + str(roll))
         dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))
 
     if event.reward.title == config["rewards"][reward_map["Lock P3 Dice"]]["name"]:
@@ -429,16 +431,16 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 2:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
-            time.sleep(0.001)
-        Log_message('Triggering: Locked P3 Dice to ' + str(roll))
+            time.sleep(0.25)
+        log_message('Triggering: Locked P3 Dice to ' + str(roll))
         dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))
-
-
 
     if event.reward.title == config["rewards"][reward_map["Lock P4 Dice"]]["name"]:
         roll = event.input
@@ -447,11 +449,13 @@ def loadGame(event, log_message):
         if int(roll) == 0:
             roll = 1
         roll_hex = hex(int(roll))[2:]
+        while not (89 <= int.from_bytes(dolphin_memory_engine.read_bytes(0x001D3CE3, 1), byteorder='big') <= 95):
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x8018FD02, 1), byteorder='big') != 3:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') != 0:
-            time.sleep(0.001)
+            time.sleep(0.25)
         while int.from_bytes(dolphin_memory_engine.read_bytes(0x801D40A2, 1), byteorder='big') == 0:
-            time.sleep(0.001)
-        Log_message('Triggering: Locked P4 Dice to ' + str(roll))
+            time.sleep(0.25)
+        log_message('Triggering: Locked P4 Dice to ' + str(roll))
         dolphin_memory_engine.write_bytes(0x801D40A2, int(roll_hex, 16).to_bytes(1, byteorder='big'))

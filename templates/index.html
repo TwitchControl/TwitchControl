@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reward Redemption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #e7e7e7;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 80%;
+            max-width: 800px;
+        }
+        #popup button {
+            background-color: #f44336;
+        }
+        input[type="number"] {
+            width: 120px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Rewards</h1>
+        <ul>
+            {% for reward in rewards %}
+            <li>
+                <span>{{ reward.name }}</span>
+                {% if reward.isUserInputRequired == "True" %}
+                <input type="number" id="input-{{ reward.name }}" placeholder="{{ reward.prompt }}">
+                {% endif %}
+                <button onclick="redeemReward('{{ reward.name }}', '{{ reward.isUserInputRequired | lower }}' === 'true')">Redeem</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="popup">
+        <p id="popup-message"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        function redeemReward(rewardName, requiresInput) {
+            let inputValue = null;
+            if (requiresInput) {
+                inputValue = document.getElementById(`input-${rewardName}`).value;
+                if (!inputValue || inputValue < 1 || inputValue > 20) {
+                    alert('Please enter a valid number between 1 and 20.');
+                    return;
+                }
+            }
+
+            console.log(`Attempting to redeem reward: ${rewardName} with input: ${inputValue}`);
+
+            fetch('/redeem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reward_name: rewardName, input_value: inputValue })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById('popup-message').innerText = data.message;
+                document.getElementById('popup').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while redeeming the reward.');
+            });
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

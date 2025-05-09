@@ -8,12 +8,17 @@ import platform
 import asyncio
 import importlib
 import sys
+import webbrowser
 
 import customtkinter
 import json5
 import twitchio
+import subprocess
+
 from twitchio.ext import commands, pubsub
 from PIL import ImageTk
+
+from web_portal import run_flask_app, set_log_message
 
 from plugins.marioParty4 import marioParty4
 
@@ -181,7 +186,7 @@ class App():
         except json5.JSONDecodeError as e:
             log_message(f"Error decoding JSON for plugin {selected_game}: {str(e)}")
 
-    def submit_command(self):
+    def submit_command(self, event=None):
         command = self.command_entry.get()
         log_message(f"> {command}")
         self.command_entry.delete(0, "end")
@@ -200,7 +205,9 @@ class App():
             self.handle_unlink()
         elif "/version" in command:
             self.handle_version()
-        elif command == "/config":  # New command to open config window
+        elif "/web" in command:
+            self.handle_web()
+        elif command == "/config":
             self.open_config_window()
         else:
             log_message(f"Unknown command. Type /help for a list of commands.")
@@ -218,6 +225,8 @@ class App():
         log_message("/link - Link to a Twitch account")
         log_message("/unlink - Unlink from Twitch.")
         log_message("/version - Gives the version of the app.")
+        log_message("/web - Opens a web interface for manual redemption.")
+
 
     def handle_disconnect(self):
         self.disconnect_from_dolphin()
@@ -326,6 +335,19 @@ class App():
 
     def run_gui(self):
         self.window.mainloop()
+
+    def handle_web(self):
+        try:
+            set_log_message(log_message)
+            # Start the Flask server in a new thread
+            flask_thread = threading.Thread(target=run_flask_app, daemon=True)
+            flask_thread.start()
+            log_message("Web portal started at http://localhost:5776")
+
+            # Open web browser
+            webbrowser.open("http://localhost:5776")
+        except Exception as e:
+            log_message(f"Failed to start web portal: {str(e)}")
 
 class TwitchBot(commands.Bot):
     def __init__(self, token, initial_channels):

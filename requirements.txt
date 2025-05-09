@@ -7,3 +7,4 @@ json5
 requests
 pywin32
 Pillow
+flask

@@ -142,8 +142,7 @@
       maxPerUserPerStream: 1,
       maxPerStreamEnabled: "True",
       cooldown: 60,
-      enabled: "True",
-      dxItems: "False"
+      enabled: "True"
     },
     {
       name: "Give P2 1 Item",
@@ -152,8 +151,7 @@
       maxPerUserPerStream: 1,
       maxPerStreamEnabled: "True",
       cooldown: 60,
-      enabled: "True",
-      dxItems: "False"
+      enabled: "True"
     },
     {
       name: "Give P3 1 Item",
@@ -162,8 +160,7 @@
       maxPerUserPerStream: 1,
       maxPerStreamEnabled: "True",
       cooldown: 60,
-      enabled: "True",
-      dxItems: "False"
+      enabled: "True"
     },
     {
       name: "Give P4 1 Item",
@@ -172,8 +169,7 @@
       maxPerUserPerStream: 1,
       maxPerStreamEnabled: "True",
       cooldown: 60,
-      enabled: "True",
-      dxItems: "False"
+      enabled: "True"
     },
     {
       name: "-20 Coins P1",

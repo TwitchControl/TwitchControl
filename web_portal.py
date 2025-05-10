@@ -37,7 +37,7 @@ def set_log_message(func):
     
 def load_rewards():
     try:
-        config_path = resource_path('config.json5')
+        config_path = 'config.json5'
         with open(config_path, 'r') as config_file:
             config = json5.load(config_file)
         selected_plugin = config.get("selectedPlugin", "None")
@@ -84,7 +84,7 @@ def redeem():
     event = type('Event', (object,), {'reward': type('Reward', (object,), {'title': reward_name}), 'input': input_value})
 
     def process_reward():
-        config_path = resource_path('config.json5')
+        config_path = 'config.json5'
         with open(config_path, 'r') as config_file:
             config = json5.load(config_file)
             selected_plugin = config.get("selectedPlugin", "None")

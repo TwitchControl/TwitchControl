@@ -4,8 +4,22 @@ import json5
 import threading
 import importlib
 from plugins.marioParty4 import marioParty4
+import os
+import sys
 
-app = Flask(__name__)
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+app = Flask(__name__, 
+            template_folder=resource_path('templates'),
+            static_folder=resource_path('static'))
 
 # Load rewards from the game configuration
 import json5

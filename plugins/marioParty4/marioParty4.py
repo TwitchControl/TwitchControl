@@ -166,7 +166,7 @@ def loadGame(event, log_message):
         item1 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FC3F, 1)
-        if dolphin_memory_engine.read_bytes(0x80000003, 4) == "45":
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x80000003, 4), byteorder='big') == "69":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -190,7 +190,7 @@ def loadGame(event, log_message):
         item1 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FC6F, 1)
-        if dolphin_memory_engine.read_bytes(0x80000003, 4) == "45":
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x80000003, 4), byteorder='big') == "69":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -214,7 +214,7 @@ def loadGame(event, log_message):
         item1 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FC9F, 1)
-        if dolphin_memory_engine.read_bytes(0x80000003, 4) == "45":
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x80000003, 4), byteorder='big') == "69":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",
@@ -238,7 +238,7 @@ def loadGame(event, log_message):
         item1 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
         item2 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
         item3 = dolphin_memory_engine.read_bytes(0x8018FCCF, 1)
-        if dolphin_memory_engine.read_bytes(0x80000003, 4) == "45":
+        if int.from_bytes(dolphin_memory_engine.read_bytes(0x80000003, 4), byteorder='big') == "69":
             hex_values = [
                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
                 "0A", "0B", "0C", "0E", "0F", "10", "11", "12", "13", "14",

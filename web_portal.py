@@ -45,7 +45,7 @@ def load_rewards():
         # Convert the selected plugin name to lower camel case
         words = selected_plugin.split()
         lower_camel_case_plugin_name = words[0].lower() + ''.join(word.capitalize() for word in words[1:])
-        plugin_config_path = f'plugins/{lower_camel_case_plugin_name}/{lower_camel_case_plugin_name}.json5'
+        plugin_config_path = resource_path(f'plugins/{lower_camel_case_plugin_name}/{lower_camel_case_plugin_name}.json5')
         
         if not os.path.exists(plugin_config_path):
             print(f"Plugin config file not found: {plugin_config_path}")

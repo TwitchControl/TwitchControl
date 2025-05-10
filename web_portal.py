@@ -33,14 +33,15 @@ def set_log_message(func):
     
 def load_rewards():
     try:
-        with open('config.json5', 'r') as config_file:
+        config_path = resource_path('config.json5')
+        with open(config_path, 'r') as config_file:
             config = json5.load(config_file)
         selected_plugin = config.get("selectedPlugin", "None")
 
         # Convert the selected plugin name to lower camel case
         words = selected_plugin.split()
         lower_camel_case_plugin_name = words[0].lower() + ''.join(word.capitalize() for word in words[1:])
-        plugin_config_path = f'plugins/{lower_camel_case_plugin_name}/{lower_camel_case_plugin_name}.json5'
+        plugin_config_path = resource_path(f'plugins/{lower_camel_case_plugin_name}/{lower_camel_case_plugin_name}.json5')
         
         if not os.path.exists(plugin_config_path):
             print(f"Plugin config file not found: {plugin_config_path}")
@@ -79,7 +80,8 @@ def redeem():
     event = type('Event', (object,), {'reward': type('Reward', (object,), {'title': reward_name}), 'input': input_value})
 
     def process_reward():
-        with open('config.json5', 'r') as config_file:
+        config_path = resource_path('config.json5')
+        with open(config_path, 'r') as config_file:
             config = json5.load(config_file)
             selected_plugin = config.get("selectedPlugin", "None")
             words = selected_plugin.split()

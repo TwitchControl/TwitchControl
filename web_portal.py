@@ -13,7 +13,11 @@ def resource_path(relative_path):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath(".")
+        # If not running in PyInstaller, use the executable's directory
+        if getattr(sys, 'frozen', False):
+            base_path = os.path.dirname(sys.executable)
+        else:
+            base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
 
@@ -39,7 +43,8 @@ def set_log_message(func):
     
 def load_rewards():
     try:
-        with open('config.json5', 'r') as config_file:
+        config_path = 'config.json5'
+        with open(config_path, 'r') as config_file:
             config = json5.load(config_file)
         selected_plugin = config.get("selectedPlugin", "None")
 
@@ -85,7 +90,8 @@ def redeem():
     event = type('Event', (object,), {'reward': type('Reward', (object,), {'title': reward_name}), 'input': input_value})
 
     def process_reward():
-        with open('config.json5', 'r') as config_file:
+        config_path = 'config.json5'
+        with open(config_path, 'r') as config_file:
             config = json5.load(config_file)
             selected_plugin = config.get("selectedPlugin", "None")
             words = selected_plugin.split()

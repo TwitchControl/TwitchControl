@@ -21,11 +21,17 @@ app = Flask(__name__,
             template_folder=resource_path('templates'),
             static_folder=resource_path('static'))
 
-# Load rewards from the game configuration
-import json5
-import os
-
 log_message_func = None
+
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    if hasattr(sys, '_MEIPASS'):
+        # Running in a PyInstaller bundle
+        base_path = sys._MEIPASS
+    else:
+        # Running in normal Python environment
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def set_log_message(func):
     global log_message_func
@@ -40,8 +46,8 @@ def load_rewards():
         # Convert the selected plugin name to lower camel case
         words = selected_plugin.split()
         lower_camel_case_plugin_name = words[0].lower() + ''.join(word.capitalize() for word in words[1:])
-        plugin_config_path = f'plugins/{lower_camel_case_plugin_name}/{lower_camel_case_plugin_name}.json5'
-        
+        plugin_config_path = get_resource_path(f'plugins/{lower_camel_case_plugin_name}/{lower_camel_case_plugin_name}.json5')
+
         if not os.path.exists(plugin_config_path):
             print(f"Plugin config file not found: {plugin_config_path}")
             return []

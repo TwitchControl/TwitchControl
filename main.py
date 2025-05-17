@@ -165,6 +165,16 @@ class App():
 
         self.command_entry.bind("<Return>", self.submit_command)
 
+    def get_resource_path(relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        if hasattr(sys, '_MEIPASS'):
+            # Running in a PyInstaller bundle
+            base_path = sys._MEIPASS
+        else:
+            # Running in normal Python environment
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
+
     def on_game_selected(self, selected_game):
         log_message(f"Selected plugin: {format_game_name(selected_game)}")
         
@@ -177,13 +187,13 @@ class App():
             words = selected_game.split()
             lower_camel_case_game = words[0].lower() + ''.join(word.capitalize() for word in words[1:])
             camel_case_game = ''.join(word.capitalize() for word in words)
-            with open(f'plugins/{lower_camel_case_game}/{camel_case_game}.json5', 'r') as game_config_file:
+            with open(App.get_resource_path(f'plugins/{lower_camel_case_game}/{camel_case_game}.json5'), 'r') as game_config_file:
                 self.game_config = json5.load(game_config_file)
                 log_message(f"Loaded config for plugin {selected_game}.")
 
         except FileNotFoundError:
             log_message(f"Configuration file for plugin {selected_game} not found.")
-        except json5.JSONDecodeError as e:
+        except ValueError as e:
             log_message(f"Error decoding JSON for plugin {selected_game}: {str(e)}")
 
     def submit_command(self, event=None):

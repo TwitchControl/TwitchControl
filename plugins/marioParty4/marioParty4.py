@@ -2,10 +2,22 @@ import dolphin_memory_engine
 import random
 import math
 import time
+import os
+import sys
 import json5
 
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    if hasattr(sys, '_MEIPASS'):
+        # Running in a PyInstaller bundle
+        base_path = sys._MEIPASS
+    else:
+        # Running in normal Python environment
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 def loadGame(event, log_message):
-    with open('plugins/marioParty4/marioParty4.json5', 'r') as config_file:
+    with open(get_resource_path('plugins/marioParty4/marioParty4.json5'), 'r') as config_file:
             config = json5.load(config_file)
 
     reward_map = {reward["name"]: index for index, reward in enumerate(config["rewards"])}

@@ -37,7 +37,8 @@ def subscribe_to_eventsub():
         "transport": {
             "method": "webhook",
             "callback": "http://localhost:5777/eventsub",
-            "secret": base64.decode(secrets.getSecret)
+            "secret": base64.b64decode(secrets.getSecret).decode('utf-8')
+
         }
     }
     

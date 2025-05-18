@@ -15,10 +15,11 @@ import json5
 import twitchio
 import subprocess
 
-from twitchio.ext import commands, pubsub
+from twitchio.ext import commands
 from PIL import ImageTk
 
 from web_portal import run_flask_app, set_log_message
+from web_sub import run_eventsub_app
 
 from plugins.marioParty4 import marioParty4
 
@@ -74,7 +75,6 @@ class App():
         self.window.geometry("1080x720")
 
         self.client = twitchio.Client(token=self.token)
-        self.client.pubsub = pubsub.PubSubPool(self.client)
 
         plugins = ["marioParty4"]
 
@@ -363,7 +363,6 @@ class TwitchBot(commands.Bot):
     def __init__(self, token, initial_channels):
         super().__init__(token="oauth:" + token, initial_channels=initial_channels, prefix="!")
         client = twitchio.Client(token=token)
-        client.pubsub = pubsub.PubSubPool(client)
 
         with open('config.json5', 'r') as config_file:
             self.config = json5.load(config_file)
@@ -371,25 +370,10 @@ class TwitchBot(commands.Bot):
         self.register_events(client)
         dolphin_memory_engine.hook()
 
-        @client.event()
-        async def event_pubsub_channel_points(event: pubsub.PubSubChannelPointsMessage):
-            log_message(f'Received channel points event: {event.reward.title}')
-            if self.config.get("selectedPlugin", "None") == "Mario Party 4":
-                load_game_thread = threading.Thread(target=marioParty4.loadGame, args=(event, log_message))
-                load_game_thread.start()
-
-    async def subscribe_to_topics(self, client):
-        topics = [
-            pubsub.channel_points(self.config["token"])[int(get_broadcaster_id(self.config["channelName"], self.config["token"]))],
-        ]
-        await client.pubsub.subscribe_topics(topics)    
-
-
     def register_events(self, client):
         @self.event()
         async def event_ready():
             log_message(f'Logged in as: {self.nick}')
-            await self.subscribe_to_topics(client)
 
     async def run_bot(self):
         await self.start()
@@ -400,6 +384,15 @@ if __name__ == "__main__":
     twitchBot = TwitchBot(token=app.config["token"], initial_channels=[app.config["channelName"]])
     twitch_bot_thread = threading.Thread(target=twitchBot.run, daemon=True)
     twitch_bot_thread.start()
+
+    # Start the EventSub Flask server in a new thread
+    eventsub_thread = threading.Thread(target=run_eventsub_app, daemon=True)
+    eventsub_thread.start()
+
+    # Start the main web portal Flask server in another thread
+    flask_thread = threading.Thread(target=run_flask_app, daemon=True)
+    flask_thread.start()
+    log_message("Web portal started at http://localhost:5776")
     
     gui_thread = threading.Thread(target=app.run_gui(), daemon=True)
     gui_thread.start()

@@ -5,3 +5,4 @@ __pycache__/
 version.py
 .DS_Store
 *.json5
+secrets.py

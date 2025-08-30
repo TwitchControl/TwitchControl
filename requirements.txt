@@ -1,10 +1,10 @@
-twitchio
 customtkinter
 tk
-pyinstaller == 6.0.0
+pyinstaller
 dolphin-memory-engine-mpn
 json5
 requests
 pywin32
 Pillow
 flask
+websocket-client

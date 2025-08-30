@@ -12,10 +12,7 @@ import webbrowser
 
 import customtkinter
 import json5
-import twitchio
 import subprocess
-
-from twitchio.ext import commands, pubsub
 from PIL import ImageTk
 
 from web_portal import run_flask_app, set_log_message
@@ -32,6 +29,7 @@ from functions import (
     format_game_name
 )
 from version import getVersion
+from eventsub_ws import EventSubWebSocketClient
 
 log_console = None
 
@@ -64,6 +62,15 @@ class App():
         with open(config_path, 'r') as config_file:
             self.config = json5.load(config_file)
 
+        # Backfill missing keys in existing config
+        changed = False
+        if "clientId" not in self.config:
+            self.config["clientId"] = "gp762nuuoqcoxypju8c569th9wz7q5"
+            changed = True
+        if changed:
+            with open(config_path, 'w') as config_file:
+                json5.dump(self.config, config_file, indent=4)
+
         
         self.token = "oauth:" + self.config.get("token", "")
         self.initial_channel = self.config.get("channelName", "")
@@ -72,10 +79,7 @@ class App():
         self.window = customtkinter.CTk()
         self.window.title(f"Twitch Control ({getVersion()})")
         self.window.geometry("1080x720")
-
-        self.client = twitchio.Client(token=self.token)
-        self.client.pubsub = pubsub.PubSubPool(self.client)
-
+        
         plugins = ["marioParty4"]
 
         if self.initial_channel == "":
@@ -359,47 +363,51 @@ class App():
         except Exception as e:
             log_message(f"Failed to start web portal: {str(e)}")
 
-class TwitchBot(commands.Bot):
-    def __init__(self, token, initial_channels):
-        super().__init__(token="oauth:" + token, initial_channels=initial_channels, prefix="!")
-        client = twitchio.Client(token=token)
-        client.pubsub = pubsub.PubSubPool(client)
-
-        with open('config.json5', 'r') as config_file:
-            self.config = json5.load(config_file)
-
-        self.register_events(client)
+class TwitchEventHandler:
+    def __init__(self, config):
+        self.config = config
         dolphin_memory_engine.hook()
 
-        @client.event()
-        async def event_pubsub_channel_points(event: pubsub.PubSubChannelPointsMessage):
-            log_message(f'Received channel points event: {event.reward.title}')
-            if self.config.get("selectedPlugin", "None") == "Mario Party 4":
-                load_game_thread = threading.Thread(target=marioParty4.loadGame, args=(event, log_message))
-                load_game_thread.start()
+        # EventSub WS client for channel points redemptions
+        broadcaster_id = get_broadcaster_id(self.config["channelName"], self.config["token"])
+        if not broadcaster_id:
+            log_message("Failed to get broadcaster ID - check your channel name and token")
+            return
 
-    async def subscribe_to_topics(self, client):
-        topics = [
-            pubsub.channel_points(self.config["token"])[int(get_broadcaster_id(self.config["channelName"], self.config["token"]))],
-        ]
-        await client.pubsub.subscribe_topics(topics)    
+        def on_redemption(event):
+            try:
+                log_message(f'Received channel points event: {event.reward.title}')
+                if self.config.get("selectedPlugin", "None") == "Mario Party 4":
+                    load_game_thread = threading.Thread(target=marioParty4.loadGame, args=(event, log_message))
+                    load_game_thread.start()
+            except Exception as exc:
+                log_message(f"Error handling redemption: {exc}")
 
-
-    def register_events(self, client):
-        @self.event()
-        async def event_ready():
-            log_message(f'Logged in as: {self.nick}')
-            await self.subscribe_to_topics(client)
-
-    async def run_bot(self):
-        await self.start()
+        self.eventsub_client = EventSubWebSocketClient(
+            token=self.config["token"],
+            client_id=self.config.get("clientId", "gp762nuuoqcoxypju8c569th9wz7q5"),
+            broadcaster_id=broadcaster_id,
+            on_redemption=on_redemption,
+            log_message=log_message,
+        )
+        
+    def start(self):
+        if hasattr(self, 'eventsub_client'):
+            self.eventsub_client.start()
+            log_message("EventSub WebSocket client started")
+        
+    def stop(self):
+        if hasattr(self, 'eventsub_client'):
+            self.eventsub_client.stop()
 
 if __name__ == "__main__":
     app = App()
 
-    twitchBot = TwitchBot(token=app.config["token"], initial_channels=[app.config["channelName"]])
-    twitch_bot_thread = threading.Thread(target=twitchBot.run, daemon=True)
-    twitch_bot_thread.start()
+    # Start EventSub handler for channel points
+    if app.config.get("token") and app.config.get("channelName"):
+        twitch_handler = TwitchEventHandler(app.config)
+        twitch_handler.start()
+    else:
+        log_message("No Twitch credentials configured - use /link to connect")
     
-    gui_thread = threading.Thread(target=app.run_gui(), daemon=True)
-    gui_thread.start()
+    app.run_gui()

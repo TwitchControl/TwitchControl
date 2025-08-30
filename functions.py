@@ -2,15 +2,31 @@ import requests
 import json5
 import sys
 import dolphin_memory_engine
+import os
 
 if sys.platform == "win32":
     import win32gui
+
+
+def _load_client_id(default_value: str) -> str:
+    """Load Client-ID from config.json5, fallback to provided default."""
+    try:
+        config_path = os.path.abspath("config.json5")
+        if os.path.exists(config_path):
+            with open(config_path, 'r', encoding='utf-8') as config_file:
+                config = json5.load(config_file)
+                cid = str(config.get("clientId", "")).strip()
+                if cid:
+                    return cid
+    except Exception:
+        pass
+    return default_value
 
 def get_broadcaster_id(username, token):
     url = f"https://api.twitch.tv/helix/users?login={username}"
     
     headers = {
-        'Client-ID': 'gp762nuuoqcoxypju8c569th9wz7q5',
+        'Client-ID': _load_client_id('gp762nuuoqcoxypju8c569th9wz7q5'),
         'Authorization': f'Bearer {token}',
     }
     
@@ -69,7 +85,7 @@ def create_channel_point_reward(username, title, cost, token, maxPerStream, maxP
     url = f"https://api.twitch.tv/helix/channel_points/custom_rewards"
     
     headers = {
-        'Client-ID': 'gp762nuuoqcoxypju8c569th9wz7q5',
+        'Client-ID': _load_client_id('gp762nuuoqcoxypju8c569th9wz7q5'),
         'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json'
     }

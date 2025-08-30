@@ -30,18 +30,6 @@ jobs:
         
     - name: Build Project
       run: pyinstaller --onefile .\main.py --name="Twitch Control" -w --add-data "templates/;templates/" --add-data "plugins/;plugins/"
-
-    - name: Trusted Signing
-      uses: azure/trusted-signing-action@v0.5.1
-      with:
-        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-        endpoint: https://eus.codesigning.azure.net/
-        trusted-signing-account-name: TabithaHanegan
-        certificate-profile-name: vscx-certificate-profile
-        files-folder: dist/
-        files-folder-filter: exe,dll
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
